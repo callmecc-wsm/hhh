@@ -1,0 +1,96 @@
+{
+  "kind": "AST-extracted exact upstream declarations; no CLI/model request",
+  "source": "/workspace/agent-harness-research/repos/gemini-cli/packages/core/src/context/chatCompressionService.ts",
+  "runs": [
+    {
+      "protectedTurns": 1,
+      "entries": [
+        {
+          "index": 0,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 188,
+          "collapsed": true,
+          "preview": "0:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志\n... [Tool output collapsed from previous turn: 5904 bytes omitted to conserve memory] ..."
+        },
+        {
+          "index": 1,
+          "tool": "read_file",
+          "beforeBytes": 6002,
+          "afterBytes": 6002,
+          "collapsed": false,
+          "preview": "1:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志"
+        },
+        {
+          "index": 2,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 188,
+          "collapsed": true,
+          "preview": "2:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志\n... [Tool output collapsed from previous turn: 5904 bytes omitted to conserve memory] ..."
+        },
+        {
+          "index": 3,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 188,
+          "collapsed": true,
+          "preview": "3:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志\n... [Tool output collapsed from previous turn: 5904 bytes omitted to conserve memory] ..."
+        },
+        {
+          "index": 4,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 6002,
+          "collapsed": false,
+          "preview": "4:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志"
+        }
+      ]
+    },
+    {
+      "protectedTurns": 3,
+      "entries": [
+        {
+          "index": 0,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 188,
+          "collapsed": true,
+          "preview": "0:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志\n... [Tool output collapsed from previous turn: 5904 bytes omitted to conserve memory] ..."
+        },
+        {
+          "index": 1,
+          "tool": "read_file",
+          "beforeBytes": 6002,
+          "afterBytes": 6002,
+          "collapsed": false,
+          "preview": "1:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志"
+        },
+        {
+          "index": 2,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 6002,
+          "collapsed": false,
+          "preview": "2:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志"
+        },
+        {
+          "index": 3,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 6002,
+          "collapsed": false,
+          "preview": "3:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志"
+        },
+        {
+          "index": 4,
+          "tool": "run_shell_command",
+          "beforeBytes": 6002,
+          "afterBytes": 6002,
+          "collapsed": false,
+          "preview": "4:日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志日志"
+        }
+      ]
+    }
+  ]
+}

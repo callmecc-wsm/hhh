@@ -1,0 +1,17 @@
+{
+  "deepseek-repos": "https://api.github.com/orgs/deepseek-ai/repos?per_page=100",
+  "claude-loop": "https://code.claude.com/docs/en/how-claude-code-works",
+  "claude-teams": "https://code.claude.com/docs/en/agent-teams",
+  "codex-cloud": "https://developers.openai.com/codex/cloud/environments",
+  "claude-sandbox": "https://code.claude.com/docs/en/sandboxing",
+  "claude-hooks": "https://code.claude.com/docs/en/hooks",
+  "deepseek-tools": "https://api-docs.deepseek.com/guides/tool_calls",
+  "deepseek-context": "https://api-docs.deepseek.com/guides/context_caching",
+  "claude-agent-loop": "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
+  "claude-long-running": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+  "claude-context": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+  "claude-sandbox-engineering": "https://www.anthropic.com/engineering/claude-code-sandboxing",
+  "claude-docs-alt": "https://docs.anthropic.com/en/docs/claude-code/overview",
+  "claude-sdk": "https://platform.claude.com/docs/en/agent-sdk/overview",
+  "codex-long-running": "https://openai.com/index/introducing-codex/"
+}

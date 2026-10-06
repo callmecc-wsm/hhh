@@ -1,0 +1,113 @@
+{
+  "kind": "actual upstream functions, no summarization LLM called",
+  "thresholds": [
+    {
+      "tokens": 699,
+      "compact": false
+    },
+    {
+      "tokens": 700,
+      "compact": true
+    },
+    {
+      "tokens": 799,
+      "compact": true
+    },
+    {
+      "tokens": 800,
+      "compact": true
+    }
+  ],
+  "before": [
+    {
+      "role": "user",
+      "name": null,
+      "content": "约束：不能改公开 API。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    },
+    {
+      "role": "assistant",
+      "name": null,
+      "content": "旧调查结果。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    },
+    {
+      "role": "user",
+      "name": null,
+      "content": "现在修复加法。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    },
+    {
+      "role": "assistant",
+      "name": null,
+      "content": "准备执行。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    }
+  ],
+  "summary_request": {
+    "role": "user",
+    "name": null,
+    "content": [
+      {
+        "type": "text",
+        "text": "## Message 1\nRole: user\nContent:\n"
+      },
+      {
+        "type": "text",
+        "text": "约束：不能改公开 API。"
+      },
+      {
+        "type": "text",
+        "text": "## Message 2\nRole: assistant\nContent:\n"
+      },
+      {
+        "type": "text",
+        "text": "旧调查结果。"
+      },
+      {
+        "type": "text",
+        "text": "\n\n---\n\nThe above is a list of messages in an agent conversation. You are now given a task to compact this conversation context according to specific priorities and rules.\n\n**Compression Priorities (in order):**\n1. **Current Task State**: What is being worked on RIGHT NOW\n2. **Errors & Solutions**: All encountered errors and their resolutions\n3. **Code Evolution**: Final working versions only (remove intermediate attempts)\n4. **System Context**: Project structure, dependencies, environment setup\n5. **Design Decisions**: Architectural choices and their rationale\n6. **TODO Items**: Unfinished tasks and known issues\n\n**Compression Rules:**\n- MUST KEEP: Error messages, stack traces, working solutions, current task\n- MERGE: Similar discussions into single summary points\n- REMOVE: Redundant explanations, failed attempts (keep lessons learned), verbose comments\n- CONDENSE: Long code blocks → keep signatures + key logic only\n\n**Special Handling:**\n- For code: Keep full version if < 20 lines, otherwise keep signature + key logic\n- For errors: Keep full error message + final solution\n- For discussions: Extract decisions and action items only\n\n**Required Output Structure:**\n\n<current_focus>\n[What we're working on now]\n</current_focus>\n\n<environment>\n- [Key setup/config points]\n- ...more...\n</environment>\n\n<completed_tasks>\n- [Task]: [Brief outcome]\n- ...more...\n</completed_tasks>\n\n<active_issues>\n- [Issue]: [Status/Next steps]\n- ...more...\n</active_issues>\n\n<code_state>\n\n<file>\n[filename]\n\n**Summary:**\n[What this code file does]\n\n**Key elements:**\n- [Important functions/classes]\n- ...more...\n\n**Latest version:**\n[Critical code snippets in this file]\n</file>\n\n<file>\n[filename]\n...Similar as above...\n</file>\n\n...more files...\n</code_state>\n\n<important_context>\n- [Any crucial information not covered above]\n- ...more...\n</important_context>\n"
+      }
+    ],
+    "tool_calls": null,
+    "tool_call_id": null,
+    "partial": null
+  },
+  "preserved": [
+    {
+      "role": "user",
+      "name": null,
+      "content": "现在修复加法。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    },
+    {
+      "role": "assistant",
+      "name": null,
+      "content": "准备执行。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    }
+  ],
+  "reverted_history": [
+    {
+      "role": "user",
+      "name": null,
+      "content": "约束：不能改公开 API。",
+      "tool_calls": null,
+      "tool_call_id": null,
+      "partial": null
+    }
+  ],
+  "file_after_revert": "after edit"
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "scenario": "continue",
+    "model_text": "完成了，但没有 promise 标记。",
+    "returncode": 0,
+    "stdout": "{\n  \"decision\": \"block\",\n  \"reason\": \"修复加法并通过测试。\",\n  \"systemMessage\": \"🔄 Ralph iteration 2 | To stop: output <promise>DONE</promise> (ONLY when statement is TRUE - do not lie to exit!)\"\n}\n",
+    "stderr": "",
+    "state_exists_after": true,
+    "verification_run_by_hook": false
+  },
+  {
+    "scenario": "promise",
+    "model_text": "<promise>DONE</promise>",
+    "returncode": 0,
+    "stdout": "✅ Ralph loop: Detected <promise>DONE</promise>\n",
+    "stderr": "",
+    "state_exists_after": false,
+    "verification_run_by_hook": false
+  },
+  {
+    "scenario": "limit",
+    "model_text": "还没完成。",
+    "returncode": 0,
+    "stdout": "🛑 Ralph loop: Max iterations (3) reached.\n",
+    "stderr": "",
+    "state_exists_after": false,
+    "verification_run_by_hook": false
+  }
+]

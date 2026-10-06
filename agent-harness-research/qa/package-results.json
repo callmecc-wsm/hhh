@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "requirements-lock.txt dry-run: 159 packages checked; no dependency changes needed",
+    "Python generators compiled; JavaScript syntax check passed",
+    "ZIP file CRC and per-file SHA-256 manifest verified",
+    "Clean ZIP extraction rebuilt a byte-identical HTML with the Python standard library only"
+  ],
+  "html_sha256": "7483e26b59b8b4218d9134d1ee8c407cac8e1e0079b62c8ec9ff9a5a16816aa2"
+}

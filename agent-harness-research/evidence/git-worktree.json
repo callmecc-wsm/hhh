@@ -1,0 +1,8 @@
+{
+  "kind": "real isolated temporary Git repository experiment",
+  "main_file": "original",
+  "child_file": "child change",
+  "sibling_write_possible": true,
+  "worktrees": "worktree /tmp/harness-worktree-a81xf7_0/main\nHEAD 78f454b340e194746ff0962b0f849a30cae5ed2c\nbranch refs/heads/master\n\nworktree /tmp/harness-worktree-a81xf7_0/child\nHEAD 78f454b340e194746ff0962b0f849a30cae5ed2c\nbranch refs/heads/lab-child\n\n",
+  "conclusion": "Worktree separates working files and branch state; it is not an OS security boundary."
+}

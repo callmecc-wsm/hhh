@@ -1,0 +1,10 @@
+{
+  "passed": [
+    "5 traces, every event and 3 inspectors; pass/fail evidence distinction",
+    "18 mechanisms × 7 harnesses render with evidence references",
+    "verification gate, stale evidence, compaction 699/700 boundary, output preservation, 6 experiment views",
+    "all 87 source modals and empty search state",
+    "autoplay, desktop, 390px viewport on all sections, interactions with network offline"
+  ],
+  "browser_errors": []
+}
