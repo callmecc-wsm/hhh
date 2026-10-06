@@ -535,3 +535,14 @@ body {background:var(--background); color:var(--foreground); font-family:"PingFa
   .story-section,.scene-block{scroll-margin-top:230px}
   .locked-card{padding:20px}
 }
+/* Keep the target logit row readable on the light lab surface. */
+.gradient-table>div.target{background:#eaf5f0;color:#0f6e56}
+.gradient-table>div.target code{color:#0f6e56}
+/* Full-course navigation uses the same light palette as the reading surface. */
+.map-dialog,.about-dialog{background:#fff;border-color:var(--border);color:var(--foreground)}
+.map-dialog [data-slot=dialog-description],.about-dialog [data-slot=dialog-description],.about-copy p{color:#4e5969}
+.map-summary{border-color:var(--border)}
+.map-summary strong,.map-grid svg{color:#0f6e56}
+.map-grid b{color:#1f2329}
+.map-grid>button>span{color:#4e5969}
+.map-grid>button:hover{background:#f0f7f4;border-color:#9dbfb3}
