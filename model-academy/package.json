@@ -11,7 +11,9 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:workshop": "node qa/original-training.test.mjs && node qa/workshop-simulations.test.mjs && node qa/workshop-storage.test.mjs && node qa/workshop-harness.test.mjs",
+    "docs:workshop": "node public/workshop/export-handbook.mjs && python3 public/workshop/package-materials.py"
   },
   "dependencies": {
     "react": "19.2.6",
