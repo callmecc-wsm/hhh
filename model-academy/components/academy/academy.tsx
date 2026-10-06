@@ -2,11 +2,10 @@
 
 import {useState, useEffect, useRef, useCallback, Component, type ReactNode} from 'react';
 import {
-  Check, CheckCircle2, ChevronRight, Clock3, Map, Lightbulb, Code2, ExternalLink,
+  Check, CheckCircle2, ChevronRight, Clock3, Map, Lightbulb, Code2, Lock,
   RotateCcw, GraduationCap, Layers3, NotebookPen, Info, FlaskConical, BookOpen, MessageSquareText,
 } from 'lucide-react';
 import {SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarTrigger, useSidebar} from '@/components/ui/sidebar';
-import {Progress} from '@/components/ui/progress';
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from '@/components/ui/dialog';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {Checkbox} from '@/components/ui/checkbox';
@@ -14,11 +13,10 @@ import {
   AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
   AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import {chapters, missions, phases} from '@/lib/academy/curriculum';
-import {getNarrative, THROUGH_LINE, chapterStation} from '@/lib/academy/narrative';
-import {PredictionLab, DataLab, LinearLab, AttentionLab, CausalLab, ArchitectureLab} from './labs-foundation';
-import {LossLab, OptimizerLab, SystemsLab, AlignmentLab} from './labs-training';
-import {InferenceLab, EvaluationLab} from './labs-product';
+import {missions, phases} from '@/lib/academy/curriculum';
+import {THROUGH_LINE, chapterStation} from '@/lib/academy/narrative';
+import {PredictionLab, DataLab} from './labs-foundation';
+import preview from '@/lib/academy/v3-preview.json';
 import {Formula, Finding} from './shared';
 
 type ChapterProgress = {
@@ -31,11 +29,11 @@ type ChapterProgress = {
   reflectionChecked: boolean[];
   reflected: boolean;
 };
-type Save = {version: 1; current: number; chapters: ChapterProgress[]};
+type Save = {version: 3; current: number; chapters: ChapterProgress[]};
 
-const KEY = 'model-academy-v1';
+const KEY = 'model-academy-v3-preview';
 const fresh = (): Save => ({
-  version: 1,
+  version: 3,
   current: 0,
   chapters: missions.map(() => ({
     read: [],
@@ -49,40 +47,65 @@ const fresh = (): Save => ({
   })),
 });
 
+const chapterList = [...preview.playable, ...preview.locked];
+const sectionCount = (i: number) => preview.playable[i]?.sections.length ?? 0;
+const quizzes = (i: number) => (preview.playable[i]?.quizzes ?? []).map(q => ({...q, options: ['对', '错'], answer: q.answer ? 0 : 1}));
+const rubrics = [
+  ['说明概率依赖已有上下文', '说明新 token 接回输入后再次计算', '说明通顺不等于事实正确'],
+  ['说明材料的清理与隔离', '说明中间粒度的需要及合并后重算', '区分 token、ID、词表大小与上下文长度'],
+];
 function verified(p: ChapterProgress, i: number) {
-  return p.submitted && missions[i].quiz.every((q, j) => p.answers[j] === q.answer);
+  return i < preview.playable.length && p.submitted && quizzes(i).every((q, j) => p.answers[j] === q.answer);
 }
 function completion(p: ChapterProgress, i: number) {
-  return p.read.length === 6 && p.lab && verified(p, i) && p.reflected;
+  return i < preview.playable.length && p.read.length === sectionCount(i) && p.lab && verified(p, i) && p.reflected;
 }
+const STEP_IDS = ['hook', 'teach', 'lab', 'check'] as const;
+const labs = [PredictionLab, DataLab];
 
-const STEP_IDS = ['hook', 'lab', 'takeaways', 'check'] as const;
-
-const labs = [
-  PredictionLab, DataLab, LinearLab, AttentionLab, CausalLab, ArchitectureLab,
-  LossLab, OptimizerLab, SystemsLab, AlignmentLab, InferenceLab, EvaluationLab,
-];
+// Only the inline formatting and local links used in the authoritative prose.
+function Inline({text}: {text: string}) {
+  return <>{text.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\(#[^)]+\))/g).map((part, i) => {
+    if (part.startsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    const link = part.match(/^\[([^\]]+)\]\((#[^)]+)\)$/);
+    return link ? <a key={i} href={link[2]}>{link[1]}</a> : part;
+  })}</>;
+}
+function Paras({items}: {items: string[]}) {
+  return <>{items.map((text, i) => <p key={i}><Inline text={text} /></p>)}</>;
+}
+type Block = {type: string; text?: string; id?: string; rows?: string[][]; items?: string[]};
+function ReaderBlock({block, title}: {block: Block; title: string}) {
+  switch (block.type) {
+    case 'p': return <p><Inline text={block.text ?? ''} /></p>;
+    case 'formula': return <Formula>{block.text}</Formula>;
+    case 'olist': return <ol>{block.items?.map((text, i) => <li key={i}><Inline text={text} /></li>)}</ol>;
+    case 'table': return <div className="reader-table-wrap"><table><thead><tr>{block.rows?.[0].map((text, i) => <th key={i} scope="col"><Inline text={text} /></th>)}</tr></thead><tbody>{block.rows?.slice(1).map((row, i) => <tr key={i}>{row.map((text, j) => <td key={j}><Inline text={text} /></td>)}</tr>)}</tbody></table></div>;
+    case 'figure': return <figure className="lesson-figure"><img src={`${import.meta.env.BASE_URL}course/figures/${block.id}.webp`} alt={title} width={1280} height={720} loading="lazy" /></figure>;
+    default: return null;
+  }
+}
 
 function validSave(x: unknown): x is Save {
   if (!x || typeof x !== 'object') return false;
   const s = x as Save;
   return (
-    s.version === 1 &&
+    s.version === 3 &&
     Number.isInteger(s.current) &&
     s.current >= 0 &&
     s.current < 12 &&
     Array.isArray(s.chapters) &&
     s.chapters.length === 12 &&
     s.chapters.every(
-      (p) =>
-        Array.isArray(p.read) &&
-        p.read.length <= 6 &&
-        p.read.every((n) => Number.isInteger(n) && n >= 0 && n < 6) &&
+      (p, i) =>
+        !!p && Array.isArray(p.read) &&
+        p.read.length <= sectionCount(i) && new Set(p.read).size === p.read.length &&
+        p.read.every((n) => Number.isInteger(n) && n >= 0 && n < sectionCount(i)) &&
         typeof p.lab === 'boolean' &&
         typeof p.evidence === 'string' &&
         Array.isArray(p.answers) &&
         p.answers.length === 3 &&
-        p.answers.every((a) => a === null || (Number.isInteger(a) && a >= 0 && a < 3)) &&
+        p.answers.every((a) => a === null || (Number.isInteger(a) && a >= 0 && a < 2)) &&
         typeof p.submitted === 'boolean' &&
         typeof p.draft === 'string' &&
         Array.isArray(p.reflectionChecked) &&
@@ -158,7 +181,7 @@ function Nav({current, save, onNavigate}: {current: number; save: Save; onNaviga
               const done = completion(save.chapters[i], i);
               return (
                 <button
-                  key={m.name}
+                  key={chapterList[i].title}
                   className={'chapter-nav ' + (current === i ? 'active' : '') + (done ? ' completed' : '')}
                   aria-current={current === i ? 'step' : undefined}
                   onClick={() => {
@@ -166,8 +189,8 @@ function Nav({current, save, onNavigate}: {current: number; save: Save; onNaviga
                     setOpenMobile(false);
                   }}
                 >
-                  <span className="chapter-num">{done ? <Check size={14} /> : String(i + 1).padStart(2, '0')}</span>
-                  <span>{m.name}</span>
+                  <span className="chapter-num">{i >= 2 ? <Lock size={14} aria-label="未开放" /> : done ? <Check size={14} /> : String(i + 1).padStart(2, '0')}</span>
+                  <span>{chapterList[i].title}</span>
                   {current === i && <span className="current-mark" />}
                 </button>
               );
@@ -194,7 +217,6 @@ export default function Academy() {
   const [storageError, setStorageError] = useState('');
   const [mapOpen, setMapOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
-  const [hint, setHint] = useState(false);
   const [notice, setNotice] = useState('');
   const [activeStep, setActiveStep] = useState<(typeof STEP_IDS)[number]>('hook');
   const live = useRef(save);
@@ -226,9 +248,10 @@ export default function Academy() {
   const current = save.current;
   const p = save.chapters[current];
   const m = missions[current];
-  const ch = chapters[current];
+  const ch = preview.playable[current];
+  const locked = preview.locked[current - 2];
+  const quiz = quizzes(current);
   const Lab = labs[current];
-  const narrative = getNarrative(current, m.summary, m.task, m.deepTitle);
 
   const patch = useCallback((data: Partial<ChapterProgress>) => {
     setSave((s) => ({...s, chapters: s.chapters.map((cp, i) => (i === s.current ? {...cp, ...data} : cp))}));
@@ -236,7 +259,6 @@ export default function Academy() {
 
   const navigate = useCallback((i: number) => {
     setSave((s) => ({...s, current: i}));
-    setHint(false);
     setNotice('');
     setActiveStep('hook');
     window.scrollTo({top: 0, behavior: 'instant'});
@@ -256,7 +278,7 @@ export default function Academy() {
           currentChapter: live.current.current + 1,
           chapters: missions.map((mm, i) => ({
             number: i + 1,
-            title: mm.name,
+            title: chapterList[i].title,
             read: live.current.chapters[i].read.length,
             experiment: live.current.chapters[i].lab,
             quiz: verified(live.current.chapters[i], i),
@@ -275,7 +297,7 @@ export default function Academy() {
           if (typeof n !== 'number' || !Number.isInteger(n) || n < 1 || n > 12) throw new Error('chapter 必须是 1 到 12 的整数');
           navigate(n - 1);
           await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-          return {chapter: n, title: missions[n - 1].name};
+          return {chapter: n, title: chapterList[n - 1].title};
         },
       },
     ];
@@ -304,11 +326,11 @@ export default function Academy() {
     );
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
-  }, [current]);
+  }, [current, ready]);
 
   function finishLab(evidence: string) {
     patch({lab: true, evidence});
-    setNotice('实验已记录。往下看原理，把刚看见的机制收成结论。');
+    setNotice('实验已记录。对照下方回指，再完成小结与自测。');
   }
 
   function markScene(j: number) {
@@ -317,10 +339,10 @@ export default function Academy() {
   }
 
   function markAllScenes() {
-    patch({read: [0, 1, 2, 3, 4, 5]});
+    patch({read: Array.from({length: ch.sections.length}, (_, i) => i)});
   }
 
-  const score = p.submitted ? m.quiz.filter((q, j) => p.answers[j] === q.answer).length : 0;
+  const score = p.submitted ? quiz.filter((q, j) => p.answers[j] === q.answer).length : 0;
   const readCount = save.chapters.reduce((n, cp) => n + cp.read.length, 0);
   const labCount = save.chapters.filter((cp) => cp.lab).length;
   const completed = save.chapters.filter((cp, i) => completion(cp, i)).length;
@@ -329,7 +351,7 @@ export default function Academy() {
   const stepDone = {
     hook: true,
     lab: p.lab,
-    takeaways: p.read.length === 6,
+    teach: !!ch && p.read.length === ch.sections.length,
     check: verified(p, current) && p.reflected,
   };
 
@@ -377,21 +399,21 @@ export default function Academy() {
               <div className="station-row">
                 <span className="station-pill">主线 · {THROUGH_LINE[station]}</span>
                 <span className="station-meta">
-                  {current + 1} / 12 · 约 {m.minutes} 分钟
+                  {current + 1} / 12 · {ch ? `约 ${m.minutes} 分钟` : '待开放'}
                 </span>
               </div>
-              <h1>{ch.title}</h1>
-              <p className="chapter-lead">{m.summary}</p>
-              {narrative.fromPrevious && <p className="bridge-prev">{narrative.fromPrevious}</p>}
+              <h1>{chapterList[current].title}</h1>
+
             </div>
           </div>
 
+          {ch ? <>
           <nav className="story-steps" aria-label="本章学习步骤">
             {[
-              {id: 'hook', label: '问题与直觉', icon: Lightbulb},
-              {id: 'lab', label: '亲手看一次', icon: FlaskConical},
-              {id: 'takeaways', label: '带走的结论', icon: BookOpen},
-              {id: 'check', label: '判断与复述', icon: MessageSquareText},
+              {id: 'hook', label: '问题', icon: Lightbulb},
+              {id: 'teach', label: '讲解', icon: BookOpen},
+              {id: 'lab', label: '验证', icon: FlaskConical},
+              {id: 'check', label: '小结与自测', icon: MessageSquareText},
             ].map((s) => {
               const Icon = s.icon;
               const done = stepDone[s.id as keyof typeof stepDone];
@@ -410,144 +432,46 @@ export default function Academy() {
             })}
           </nav>
 
-          {/* 1. Hook + intuition */}
-          <section className="story-section" id="step-hook">
-            <header className="section-kicker">
-              <span>01</span>
-              <h2>{narrative.hookTitle}</h2>
-            </header>
-            <p className="hook-body">{narrative.hook}</p>
-            <div className="intuition-card">
-              <h3>{narrative.intuitionTitle}</h3>
-              {narrative.intuition.map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
+          <section className="story-section lesson-prose" id="step-hook">
+            <header className="section-kicker"><span>01</span><h2>要解决的问题</h2></header>
+            <Paras items={ch.hookParas} />
           </section>
-
-          {/* 2. Lab */}
-          <section className="story-section" id="step-lab">
-            <header className="section-kicker">
-              <span>02</span>
-              <h2>亲手看一次</h2>
-            </header>
-            <div className="lab-frame">
-              <div className="watch-for">
-                <div className="watch-title">
-                  <Lightbulb size={16} />
-                  动手前，先留意这些
-                </div>
-                <ul>
-                  {narrative.labWatch.map((w) => (
-                    <li key={w}>{w}</li>
-                  ))}
-                </ul>
-                <p className="watch-task">
-                  <strong>本章目标：</strong>
-                  {m.task}
-                </p>
-                <button type="button" className="hint-inline" onClick={() => setHint((h) => !h)}>
-                  {hint ? '收起提示' : '需要一点提示'}
-                </button>
-                {hint && <p className="hint-body">{m.hint}</p>}
-              </div>
-              <div className="experiment-panel story-lab">
-                <LabBoundary>
-                  <Lab onComplete={finishLab} done={p.lab} />
-                </LabBoundary>
-              </div>
-              {p.lab && (
-                <Finding success>
-                  {narrative.labBridge}
-                  {p.evidence ? `（记录：${p.evidence}）` : ''}
-                </Finding>
-              )}
-            </div>
-          </section>
-
-          {/* 3. Principles as causal story */}
-          <section className="story-section" id="step-takeaways">
-            <header className="section-kicker">
-              <span>03</span>
-              <h2>{narrative.takeawaysTitle}</h2>
-            </header>
-            <p className="section-lead">下面六节保留原课程全部原理。按因果顺序往下读；每节结束都有一句可带走的结论。</p>
+          <section className="story-section" id="step-teach">
+            <header className="section-kicker"><span>02</span><h2>讲解</h2></header>
             <div className="scene-story">
-              {ch.scenes.map((scene, j) => (
-                <article
-                  key={scene.id}
-                  className={'scene-block' + (p.read.includes(j) ? ' read' : '')}
-                  onFocus={() => markScene(j)}
-                  onMouseEnter={() => markScene(j)}
-                >
-                  {j > 0 && narrative.sceneTransitions[j - 1] && (
-                    <p className="scene-transition">{narrative.sceneTransitions[j - 1]}</p>
-                  )}
-                  <div className="scene-head">
-                    <span className="scene-index">{String(j + 1).padStart(2, '0')}</span>
-                    <h3>{scene.title}</h3>
-                  </div>
-                  <figure className="lesson-figure">
-                    <img
-                      src={`${import.meta.env.BASE_URL}course/figures/${scene.id}.webp`}
-                      alt={`${scene.title}：${scene.takeaway}`}
-                      width={1280}
-                      height={720}
-                      loading={j < 2 ? 'eager' : 'lazy'}
-                    />
-                    <figcaption>
-                      {scene.formula} · {scene.takeaway}
-                    </figcaption>
-                  </figure>
-                  <div className="lesson-prose">
-                    <p>{scene.narration}</p>
-                  </div>
-                  <div className="takeaway-chip">
-                    <strong>带走：</strong>
-                    {scene.takeaway}
-                  </div>
-                  {scene.sources?.length > 0 && (
-                    <div className="references">
-                      {scene.sources.map((url: string) => (
-                        <a key={url} href={url} target="_blank" rel="noreferrer">
-                          <ExternalLink size={12} />
-                          参考
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </article>
-              ))}
+              {ch.sections.map((section, j) => <article key={section.id} id={section.anchor} tabIndex={0}
+                className={'scene-block lesson-prose' + (p.read.includes(j) ? ' read' : '')}
+                onFocus={() => markScene(j)} onMouseEnter={() => markScene(j)}>
+                <div className="scene-head"><span className="scene-index">{String(j + 1).padStart(2, '0')}</span><h3>{section.title}</h3></div>
+                {section.blocks.map((block, k) => <ReaderBlock key={k} block={block} title={section.title} />)}
+                <div className="takeaway-chip"><strong>带走：</strong><Inline text={section.takeaway} /></div>
+              </article>)}
             </div>
-
-            <div className="deep-section">
-              <span className="small-label">再深入一步</span>
-              <h3>{m.deepTitle}</h3>
-              {m.deep.map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-              <Formula>{m.formula}</Formula>
+            {p.read.length < ch.sections.length
+              ? <button type="button" className="btn" onClick={markAllScenes}>我已读完本章 {ch.sections.length} 节讲解</button>
+              : <Finding success>本章 {ch.sections.length} 节讲解已记入进度。</Finding>}
+          </section>
+          <section className="story-section" id="step-lab">
+            <header className="section-kicker"><span>03</span><h2>{ch.lab.title}</h2></header>
+            <div className="lab-frame">
+              <div className="watch-for lesson-prose"><strong>先猜</strong><p><Inline text={ch.lab.guess} /></p></div>
+              <div className="experiment-panel story-lab"><LabBoundary key={current}><Lab onComplete={finishLab} done={p.lab} /></LabBoundary></div>
+              <div className="lesson-prose"><Paras items={ch.lab.body} /></div>
+              {p.lab && <Finding success>实验已记录。{p.evidence}</Finding>}
             </div>
-
-            {p.read.length < 6 && (
-              <button type="button" className="btn" onClick={markAllScenes}>
-                我已读完六节原理
-              </button>
-            )}
-            {p.read.length === 6 && <Finding success>六节原理已记入本章进度。</Finding>}
           </section>
 
           {/* 4. Quiz + Feynman */}
           <section className="story-section" id="step-check">
             <header className="section-kicker">
               <span>04</span>
-              <h2>判断与复述</h2>
+              <h2>小结与自测</h2>
             </header>
-            <p className="section-lead">用三道判断题核对关键分叉；再用费曼复述确认自己能讲清因果。</p>
+            <div className="lesson-prose"><h3>本章小结</h3><p><Inline text={ch.summary} /></p></div>
 
             <div className="assessment-panel story-assess">
               <div className="quiz-block">
-                {m.quiz.map((q, j) => (
+                {quiz.map((q, j) => (
                   <fieldset key={q.q} className="quiz-question" disabled={p.submitted}>
                     <legend>
                       <span>{j + 1}</span>
@@ -571,7 +495,8 @@ export default function Academy() {
                     {p.submitted && (
                       <p className="quiz-why">
                         {p.answers[j] === q.answer ? '正确。' : '再看一眼：'}
-                        {q.why}
+                        <Inline text={q.why} />
+                        {ch.sections.filter(section => q.why.includes(section.title)).map(section => <a key={section.id} className="quiz-backlink" href={`#${section.anchor}`}>回看：{section.title}</a>)}
                       </p>
                     )}
                   </fieldset>
@@ -612,7 +537,7 @@ export default function Academy() {
                   <GraduationCap size={18} />
                   <div>
                     <h3>费曼复述</h3>
-                    <p>{m.teach}</p>
+                    <Paras items={ch.feynman.filter(text => !text.startsWith('可对照'))} />
                   </div>
                 </div>
                 <textarea
@@ -623,7 +548,7 @@ export default function Academy() {
                 />
                 <div className="rubric">
                   <div className="reflection-meta">自评量规（全部勾选后记为完成）</div>
-                  {m.rubric.map((r, j) => (
+                  {rubrics[current].map((r, j) => (
                     <label key={r}>
                       <Checkbox
                         checked={p.reflectionChecked[j]}
@@ -639,7 +564,7 @@ export default function Academy() {
                 </div>
                 <details className="example-fold">
                   <summary>参考表述（先自己写再看）</summary>
-                  <p>{m.example}</p>
+                  <Paras items={ch.feynman.filter(text => text.startsWith('可对照'))} />
                 </details>
                 <button
                   type="button"
@@ -656,11 +581,11 @@ export default function Academy() {
               </div>
             </div>
 
-            {narrative.toNext && (
+            {ch.leaving && (
               <div className="next-station">
                 <div>
-                  <span className="small-label">下一站</span>
-                  <p>{narrative.toNext}</p>
+                  <span className="small-label">留下的问题</span>
+                  <p>{ch.leaving}</p>
                 </div>
                 {current < 11 && (
                   <button type="button" className="btn primary" onClick={() => navigate(current + 1)}>
@@ -671,6 +596,11 @@ export default function Academy() {
               </div>
             )}
           </section>
+
+          </> : <section className="locked-card lesson-prose">
+            <Lock size={24} /><h2>这一章会在你认可预览后再铺开</h2>
+            <p><Inline text={locked.problemFull || locked.problemOneLiner} /></p>
+          </section>}
 
           {notice && (
             <div className="status-message" role="status">
@@ -685,11 +615,11 @@ export default function Academy() {
               进度保存在本浏览器
             </span>
             <span>
-              {readCount}/72 节原理 · {labCount}/12 实验 · {completed}/12 章完成
+              {readCount}/8 节讲解 · {labCount}/2 实验 · {completed}/2 章完成
             </span>
             <a href={`${import.meta.env.BASE_URL}course/课程讲义与资料.md`} download>
               <NotebookPen size={13} />
-              讲义
+              正式版讲义
             </a>
             <a href={`${import.meta.env.BASE_URL}course/mini_transformer.py`} download>
               <Code2 size={13} />
@@ -703,19 +633,19 @@ export default function Academy() {
         <DialogContent className="map-dialog">
           <DialogHeader>
             <DialogTitle>课程全景</DialogTitle>
-            <DialogDescription>12 章 · 72 节原理 · 12 个主实验 · 36 道判断题 · 12 次复述。顺着主线建立理解。</DialogDescription>
+            <DialogDescription>预览开放第 1–2 章，共 8 节讲解、2 个实验、6 道判断题。第 3–12 章展示主线问题。</DialogDescription>
           </DialogHeader>
           <div className="map-summary">
-            <StatBox value={`${readCount}/72`} label="已读原理" />
-            <StatBox value={`${labCount}/12`} label="已验证实验" />
-            <StatBox value={`${completed}/12`} label="完整学习章节" />
+            <StatBox value={`${readCount}/8`} label="已读原理" />
+            <StatBox value={`${labCount}/2`} label="已验证实验" />
+            <StatBox value={`${completed}/2`} label="完整学习章节" />
           </div>
           <div className="map-grid">
             {missions.map((mm, i) => {
               const done = completion(save.chapters[i], i);
               return (
                 <button
-                  key={mm.name}
+                  key={chapterList[i].title}
                   type="button"
                   className={current === i ? 'active' : ''}
                   onClick={() => {
@@ -723,8 +653,8 @@ export default function Academy() {
                     setMapOpen(false);
                   }}
                 >
-                  <span>{done ? <Check size={14} /> : String(i + 1).padStart(2, '0')}</span>
-                  <b>{mm.name}</b>
+                  <span>{i >= 2 ? <Lock size={14} aria-label="未开放" /> : done ? <Check size={14} /> : String(i + 1).padStart(2, '0')}</span>
+                  <b>{chapterList[i].title}</b>
                   <small>{THROUGH_LINE[chapterStation[i]]}</small>
                 </button>
               );
@@ -737,10 +667,10 @@ export default function Academy() {
         <DialogContent className="about-dialog">
           <DialogHeader>
             <DialogTitle>关于模型工坊</DialogTitle>
-            <DialogDescription>按理解优先原则重组学习路径：问题 → 直觉 → 实验 → 结论 → 判断与复述。</DialogDescription>
+            <DialogDescription>按理解优先原则重组学习路径：问题 → 讲解 → 验证 → 小结与自测。</DialogDescription>
           </DialogHeader>
           <div className="about-copy">
-            <p>原理、实验、判断题与费曼复述的内容深度与广度保持不变。界面去掉互抢注意力的仪表盘外壳，让你顺着一条主线建立理解。</p>
+            <p>本次预览只开放第 1–2 章，正文来自 Phase A。正式版未替换；后续章节暂展示待解决的问题。</p>
             <p>计算实验按公式实时求值；人工情景会在页面注明。进度仅保存在当前浏览器。</p>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -760,8 +690,7 @@ export default function Academy() {
                     onClick={() => {
                       setSave(fresh());
                                         setAboutOpen(false);
-                      setHint(false);
-                      setNotice('学习记录已清空。');
+                                        setNotice('学习记录已清空。');
                     }}
                   >
                     确认清空

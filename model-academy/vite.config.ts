@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [react()],
-  // Relative URLs work at /hhh/, custom domains, and other static hosts.
-  base: './',
+  // Preview artifact is mounted beside the unchanged formal Pages root.
+  base: '/hhh/v3/',
   resolve: { alias: { '@': fileURLToPath(new URL('.', import.meta.url)) } },
 });

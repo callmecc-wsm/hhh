@@ -506,3 +506,32 @@ body {background:var(--background); color:var(--foreground); font-family:"PingFa
 .weight-table caption,.weight-table th{color:#4e5969!important}
 .plot svg text,.vector-plot text{fill:#4e5969}
 .hint-inline,.hint-button,.stat.warn strong{color:#8a5300!important}
+
+/* v3 preview chrome and prose */
+:root{--preview-height:44px}
+.preview-banner{position:sticky;top:0;z-index:40;min-height:var(--preview-height);display:flex;align-items:center;justify-content:center;gap:18px;padding:8px 14px;background:#fff8e8;border-bottom:1px solid #ead8ae;color:#77531d;font-size:13px;line-height:20px}
+.preview-banner a{white-space:nowrap;text-decoration:underline}
+.topbar{top:var(--preview-height)}
+.academy-sidebar[data-slot=sidebar-container]{top:var(--preview-height);height:calc(100svh - var(--preview-height))}
+.story-steps{top:calc(var(--preview-height) + 56px)}
+.story-section,.scene-block{scroll-margin-top:190px}
+.reader-table-wrap{overflow-x:auto;margin:20px 0}
+.reader-table-wrap table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.8}
+.reader-table-wrap th,.reader-table-wrap td{border:1px solid var(--border);padding:12px;min-width:100px;vertical-align:top;text-align:left}
+.reader-table-wrap th{background:#f0f3f7}
+.lesson-prose ol{list-style:decimal;padding-left:24px;line-height:2}
+.lesson-prose li{margin:12px 0}
+.lesson-prose a,.quiz-backlink{color:var(--primary);text-decoration:underline}
+.quiz-backlink{display:block;margin-top:8px}
+.locked-card{padding:28px;border:1px solid var(--border);border-radius:12px;background:#fff;line-height:1.9}
+.locked-card h2{font-size:20px;margin-top:16px}
+@media(max-width:767px){
+  :root{--preview-height:64px}
+  .preview-banner{font-size:12px;gap:10px;height:var(--preview-height)}
+  .preview-banner span{max-width:280px}
+  .story-steps a span{display:inline}
+  .story-steps{flex-wrap:wrap;gap:5px}
+  .story-steps a{padding:6px 8px}
+  .story-section,.scene-block{scroll-margin-top:230px}
+  .locked-card{padding:20px}
+}
