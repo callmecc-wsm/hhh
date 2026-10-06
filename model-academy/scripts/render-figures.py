@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Rebuild the course's 72 light figures from original.json (Pillow + Noto CJK).
+"""DEPRECATED for fidelity work: use restyle-figures-light.py to preserve exact labels/numbers from master dark figures.
+
+Original docstring follows.
+Rebuild the course's 72 light figures from original.json (Pillow + Noto CJK).
 
 Run: /tmp/figvenv/bin/python scripts/render-figures.py
 Optional: --review-dir PATH (backups, contact sheets, text/bounds audit).
