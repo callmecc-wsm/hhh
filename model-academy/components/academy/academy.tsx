@@ -56,6 +56,8 @@ function completion(p: ChapterProgress, i: number) {
   return p.read.length === 6 && p.lab && verified(p, i) && p.reflected;
 }
 
+const STEP_IDS = ['hook', 'lab', 'takeaways', 'check'] as const;
+
 const labs = [
   PredictionLab, DataLab, LinearLab, AttentionLab, CausalLab, ArchitectureLab,
   LossLab, OptimizerLab, SystemsLab, AlignmentLab, InferenceLab, EvaluationLab,
@@ -132,11 +134,14 @@ function Nav({current, save, onNavigate}: {current: number; save: Save; onNaviga
         </a>
       </SidebarHeader>
       <SidebarContent className="course-nav">
-        <div className="through-line" aria-label="课程主线">
+        <div className="through-caption">主线 · {THROUGH_LINE[chapterStation[current]]}</div>
+        <div className="through-line" aria-label="课程主线进度">
           {THROUGH_LINE.map((s, i) => (
-            <span key={s} className={chapterStation[current] === i ? 'on' : ''}>
-              {s}
-            </span>
+            <span
+              key={s}
+              title={s}
+              className={chapterStation[current] === i ? 'on' : i < chapterStation[current] ? 'done' : ''}
+            />
           ))}
         </div>
         <div className="nav-caption">
@@ -191,6 +196,7 @@ export default function Academy() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [hint, setHint] = useState(false);
   const [notice, setNotice] = useState('');
+  const [activeStep, setActiveStep] = useState<(typeof STEP_IDS)[number]>('hook');
   const live = useRef(save);
   live.current = save;
 
@@ -232,6 +238,7 @@ export default function Academy() {
     setSave((s) => ({...s, current: i}));
     setHint(false);
     setNotice('');
+    setActiveStep('hook');
     window.scrollTo({top: 0, behavior: 'instant'});
   }, []);
 
@@ -279,6 +286,25 @@ export default function Academy() {
     });
     return () => ctl.abort();
   }, [navigate]);
+
+  useEffect(() => {
+    const nodes = STEP_IDS.map((id) => document.getElementById(`step-${id}`)).filter(Boolean) as HTMLElement[];
+    if (!nodes.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]?.target?.id?.startsWith('step-')) {
+          const id = visible[0].target.id.replace('step-', '') as (typeof STEP_IDS)[number];
+          if ((STEP_IDS as readonly string[]).includes(id)) setActiveStep(id);
+        }
+      },
+      {rootMargin: '-20% 0px -55% 0px', threshold: [0.1, 0.25, 0.5, 0.75]},
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, [current]);
 
   function finishLab(evidence: string) {
     patch({lab: true, evidence});
@@ -370,7 +396,12 @@ export default function Academy() {
               const Icon = s.icon;
               const done = stepDone[s.id as keyof typeof stepDone];
               return (
-                <a key={s.id} href={`#step-${s.id}`} className={done ? 'done' : ''}>
+                <a
+                  key={s.id}
+                  href={`#step-${s.id}`}
+                  className={(done ? 'done ' : '') + (activeStep === s.id ? 'current' : '')}
+                  onClick={() => setActiveStep(s.id as (typeof STEP_IDS)[number])}
+                >
                   <Icon size={14} />
                   <span>{s.label}</span>
                   {done && <Check size={12} />}
@@ -467,6 +498,7 @@ export default function Academy() {
                     <figcaption>
                       {scene.formula} · {scene.takeaway}
                     </figcaption>
+                    <span className="figure-frame-note">示意图（深色图板，后续可统一浅底重导出）</span>
                   </figure>
                   <div className="lesson-prose">
                     <p>{scene.narration}</p>
