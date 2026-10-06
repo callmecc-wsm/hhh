@@ -1,8 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Academy from '@/components/academy/academy';
+import WorkshopApp from '@/components/workshop/workshop';
 import '@/app/globals.css';
 
 createRoot(document.getElementById('root')!).render(
-  <React.StrictMode><Academy /></React.StrictMode>,
+  <React.StrictMode><WorkshopApp /></React.StrictMode>,
 );

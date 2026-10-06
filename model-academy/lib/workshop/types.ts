@@ -1,0 +1,13 @@
+export type CourseId = 'finetune' | 'distill' | 'harness';
+export type Settings = Record<string, number>;
+export type Control = {key: string; label: string; help: string; initial: number; min?: number; max?: number; step?: number; unit?: string; options?: {label: string; value: number}[]};
+export type Metric = {label: string; value: string; detail?: string};
+export type Result = {headline: string; metrics: Metric[]; columns: string[]; rows: (string | number)[][]; findings: string[]; passed: boolean; series?: {name: string; values: number[]}[]; axis?: string};
+export type Lab = {title: string; context: string; mode: '公式计算' | '真实微型训练' | '固定情景推演' | '本地状态机'; controls: Control[]; goal: string; hint: string; assumptions: string; run: (s: Settings) => Result};
+export type Quiz = {q: string; options: string[]; answer: number; why: string};
+export type Concept = {title: string; body: string; example: string};
+export type Chapter = {id: string; title: string; question: string; brief: string; concepts: Concept[]; formula: string; trap: string; caseStudy: {title: string; situation: string; options: string[]; answer: number; feedback: string[]}; quiz: Quiz[]; reflection: string; rubric: string[]; sources: {title: string; url: string}[]};
+export type Course = {id: CourseId; title: string; subtitle: string; description: string; color: string; phases: string[]; chapters: Chapter[]};
+export type Run = {id: string; settings: Settings; result: Result; prediction: string; observation: string};
+export type ChapterRecord = {runs: Run[]; read: number[]; answers: (number | null)[]; submitted: boolean; caseAnswer: number | null; reflection: string; rubric: boolean[]; reflected: boolean; harnessEvidence: string[]};
+export type CourseSave = {version: 2; current: number; chapters: Record<string, ChapterRecord>};
