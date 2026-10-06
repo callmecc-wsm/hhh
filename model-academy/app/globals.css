@@ -105,8 +105,8 @@ body {background:var(--background); color:var(--foreground); font-family:"PingFa
 .station-pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;background:var(--accent);color:var(--accent-foreground);font-size:12px;font-weight:500}
 .station-meta{font-size:12px;color:var(--muted-foreground)}
 .story-heading h1{font-size:28px;line-height:1.35;font-weight:650;letter-spacing:-.01em;margin:0 0 10px;color:var(--foreground)}
-.chapter-lead{font-size:15px;color:#4e5969;margin:0;max-width:42em}
-.bridge-prev{margin:10px 0 0;font-size:13px;color:var(--primary);background:var(--accent);padding:8px 12px;border-radius:8px;display:inline-block}
+.story-heading .chapter-lead{font-size:15px;color:#2b2f36;font-weight:500;line-height:1.8;margin:0;max-width:42em}
+.story-heading .bridge-prev{margin:10px 0 0;font-size:13px;color:var(--primary);background:var(--accent);padding:8px 12px;border-radius:8px;display:inline-block}
 
 .story-steps{position:sticky;top:56px;z-index:15;display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 14px;margin:0 0 8px;background:linear-gradient(#f5f6f8 70%,transparent)}
 .story-steps a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px;color:var(--muted-foreground);text-decoration:none}
@@ -431,31 +431,23 @@ body {background:var(--background); color:var(--foreground); font-family:"PingFa
 }
 .watch-for,.section-kicker,.intuition-card,.scene-block,.feynman-block{scroll-margin-top:148px}
 
-/* figure frame for dark webp diagrams */
+/* Light figures share the reading surface. */
 .lesson-figure{
   margin:16px 0;
-  padding:14px;
-  background:#eef0f3;
+  padding:8px;
+  background:#f7f8fa;
   border:1px solid var(--border);
   border-radius:10px;
 }
 .lesson-figure img{
-  border:1px solid #c7cad1!important;
+  border:0!important;
   border-radius:6px!important;
-  background:#0b111c;
-  box-shadow:0 1px 2px rgba(31,35,41,.06);
+  background:transparent;
 }
 .lesson-figure figcaption{
   margin-top:10px!important;
-  color:#646a73!important;
+  color:#4e5969!important;
   font-size:12px!important;
-}
-.figure-frame-note{
-  display:block;
-  font-size:11px;
-  color:#8f959e;
-  margin-top:4px;
-  text-align:center;
 }
 
 /* sidebar through-line: single-line progress, no wrap chips */
@@ -502,8 +494,15 @@ body {background:var(--background); color:var(--foreground); font-family:"PingFa
 .stat strong, .stat strong small {color:#1f2329!important}
 .stat.good strong {color:#0f6e56!important}
 .model-core b {color:#1f2329!important}
-.model-core small,.model-core b,.flow-caption {color:#1f2329!important}
-.model-core small {color:#4e5969!important; font-size:11px!important}
+.model-core small,.flow-caption {color:#4e5969!important}
+.model-core small {font-size:11px!important}
 .lab-note {color:#4e5969!important}
 .history span {color:#1f2329!important}
 .btn.primary {color:#fff!important}
+
+/* Small lab annotations remain readable on white and pale panels. */
+.range-extents,.heat-legend,.plot-legend,.corpus small,.module small,.module code,
+.opt-hero span,.memory-top span,.experiment-checks,.stage .heat-label,
+.weight-table caption,.weight-table th{color:#4e5969!important}
+.plot svg text,.vector-plot text{fill:#4e5969}
+.hint-inline,.hint-button,.stat.warn strong{color:#8a5300!important}

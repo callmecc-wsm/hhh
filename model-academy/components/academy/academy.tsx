@@ -498,7 +498,6 @@ export default function Academy() {
                     <figcaption>
                       {scene.formula} · {scene.takeaway}
                     </figcaption>
-                    <span className="figure-frame-note">示意图（深色图板，后续可统一浅底重导出）</span>
                   </figure>
                   <div className="lesson-prose">
                     <p>{scene.narration}</p>
