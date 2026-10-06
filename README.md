@@ -31,3 +31,9 @@
 [源码与运行说明](nation-lab/README.md) · [在线体验](https://nation-development-lab.macyu536.chatgpt.site)
 
 模拟器位于 `nation-lab/`：韩国、阿根廷、新加坡共 9 轮历史决策，支持预测封存、历史揭示、因果复盘与判断导出。
+
+## AI 论文训练场
+
+[完整源码与运行说明](paper-lab/README.md) · [在线阅读训练场](https://paper-reading-lab.macyu536.chatgpt.site)
+
+9 篇代表论文，包含历史场景、预测、27 段原文主动标注、实验审查、证据夹与迁移练习。源码位于 `paper-lab/`。
