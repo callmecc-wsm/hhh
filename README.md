@@ -19,3 +19,9 @@
 [源码与运行说明](country-lab/README.md) · [在线体验](https://country-causal-lab.macyu536.chatgpt.site)
 
 韩国、新加坡、阿根廷共 9 个十年回合：观察条件、选择政策、封存预测、揭晓历史、比较结果并复盘因果。
+
+## Coding Agent 研究
+
+[研究阅读入口与复现说明](coding-agent-research/README.md) · [完整文字稿与来源](coding-agent-research/research.md)
+
+从任务结构与底层系统约束分析 Coding Agent 与通用 Work / Computer Agent 的产品边界，附离线交互版。

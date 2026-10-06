@@ -1,0 +1,453 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coding Agent 会被通用 Agent 吞并吗？｜系统研究</title><style>
+:root{--ink:#18283c;--muted:#53677d;--paper:#fff;--canvas:#f3f6fa;--line:#dce3ec;--blue:#2d5295;--teal:#087e83;--copper:#9c5125;--purple:#664bb3}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.85 "PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif}a{color:var(--blue);text-underline-offset:3px}button,select{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--teal);outline-offset:4px}button{border:1px solid var(--line);background:white;color:var(--ink);padding:7px 14px;border-radius:6px}button.selected{background:var(--blue);border-color:var(--blue);color:white}button:hover{border-color:var(--blue)}p{margin:14px 0}b,strong{font-weight:650}h1,h2,h3{line-height:1.35}h1{font-size:46px;letter-spacing:-1.5px;margin:26px 0 24px;max-width:900px}h2{font-size:29px;letter-spacing:-.5px;margin:0 0 24px}h3{font-size:18px;margin:0 0 14px}main{width:min(990px,calc(100% - 300px));margin:0 50px 0 245px}section{padding:65px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px}section.hero{padding-top:65px}section>p{max-width:800px}.dateline,.caption{font-size:13px;color:var(--muted)}.thesis{font-size:28px;font-weight:600;line-height:1.6;letter-spacing:-.5px;margin:0 0 22px}.lead{font-size:20px;line-height:1.7;font-weight:550}.sidebar{position:fixed;left:0;top:0;height:100vh;width:205px;background:var(--canvas);padding:36px 22px;display:flex;flex-direction:column;border-right:1px solid var(--line)}.sidebar .brand{font-size:18px;font-weight:700;line-height:1.5;margin:0 0 32px}.sidebar nav{display:grid;gap:9px}.sidebar a{text-decoration:none;font-size:14px;color:var(--muted);padding:6px 9px;border-left:3px solid transparent}.sidebar a.active{color:var(--blue);border-color:var(--blue);background:#e8eef8}.sidebar .bottom{margin-top:auto;font-size:12px;line-height:1.7;color:var(--muted)}.layers{margin-top:32px;display:grid;gap:8px}.layer{border-radius:7px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px}.layer b{font-size:18px;white-space:nowrap}.layer span{font-size:14px}.layer.intent{background:#e5edf9;color:#214681}.layer.shared{background:#dff1ef;color:#08656a}.layer.software{background:#2d5295;color:#fff;flex-direction:column;align-items:start;gap:7px}.layer.other{background:var(--canvas);color:var(--muted);flex-direction:column;align-items:start;gap:7px}.specialties{display:grid;grid-template-columns:1fr 1fr;gap:8px}.connector{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;padding:2px}.table-scroll{overflow:auto;margin:25px 0;border-top:2px solid #a9b8cc}table{border-collapse:collapse;font-size:14px;width:100%;line-height:1.8}th,td{padding:13px 15px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line)}th{font-size:13px;color:var(--muted);background:var(--canvas);font-weight:650}td:first-child{font-weight:550;min-width:112px}td p{margin:0}.causal{display:flex;align-items:center;gap:16px;padding:22px 0;flex-wrap:wrap;color:var(--teal);font-size:16px}.causal span{color:#8da2b8}.callout{border-left:4px solid var(--teal);background:#f0f8f7;padding:18px 22px;font-size:16px}.deep{margin:25px 0;border:1px solid var(--line);border-radius:7px;overflow:hidden}.deep>summary{padding:15px 20px;background:var(--canvas);font-weight:600;cursor:pointer;font-size:15px}.deep[open]>summary{border-bottom:1px solid var(--line)}.detail-body{padding:9px 23px 23px;font-size:15px}.detail-body>.table-scroll{margin:18px -8px}.cite{font-size:12px;text-decoration:none;vertical-align:super;margin-left:3px}.classification{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:24px;padding:22px 0}.classification b{margin-left:9px;font-size:18px}.classification p{font-size:15px;color:var(--muted);margin-top:12px}.tag{display:inline-flex;width:30px;height:30px;justify-content:center;align-items:center;border-radius:50%;font-size:14px;font-weight:700}.tag.A{color:var(--purple);background:#efebfa}.tag.B{color:var(--teal);background:#e4f3f2}.tag.C{color:var(--copper);background:#faf0e9}.filter{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.filter button{font-size:13px;padding:5px 10px}#object-table td:first-child{min-width:175px;font-size:13px}#object-table td:last-child{min-width:280px}.bug-demo{display:grid;grid-template-columns:1fr 1.2fr 1fr;align-items:center;gap:20px;background:var(--canvas);padding:26px;text-align:center}.bug-demo small{font-size:13px;color:var(--muted)}.matrix{width:114px;margin:15px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:5px}.matrix i{font-style:normal;background:var(--blue);color:white;line-height:44px;border-radius:3px}.matrix i.zero{background:#e3e9f2;color:#53677d}.matrix.wrong i{background:#9c5125}.bug-text{font-size:15px}.step-tabs,.year-tabs{display:flex;gap:6px;margin:27px 0 15px;flex-wrap:wrap}.step-tabs button{font-size:14px}.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;min-height:168px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:23px 0}.case-grid p{font-size:15px;margin-bottom:0}.case-grid h3{font-size:16px;color:var(--blue)}.state-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:27px 0}.state-line>b{font-size:14px;margin-right:7px}.state-line>span{background:var(--canvas);padding:5px 10px;border:1px solid var(--line);font-size:13px;border-radius:4px}.chain{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--line);margin-top:30px;border-radius:8px;overflow:hidden}.chain>div{position:relative;padding:21px 8px 18px;text-align:center;background:var(--canvas);border-right:1px solid var(--line)}.chain>div:nth-child(n+3){background:#e9eff9}.chain b{display:block;font-size:17px}.chain span{display:block;font-size:12px;color:var(--muted);margin-top:6px}.chain-gates{display:flex;gap:20px;justify-content:space-between;color:var(--muted);font-size:12px;line-height:1.6;margin:14px 0 30px}.subheading{font-size:22px;margin:40px 0 20px}.question{border-bottom:1px solid var(--line);padding:17px 0}.question>summary{display:block;cursor:pointer;font-size:15px;line-height:1.85;padding-right:25px;position:relative}.question>summary:after{content:'+';position:absolute;right:3px;top:0;color:var(--blue);font-size:23px}.question[open]>summary:after{content:'−'}.question>summary>span{display:block;font-size:17px;font-weight:600;margin-bottom:5px}.question summary strong{font-weight:500;color:var(--blue)}.question p{font-size:14px;color:var(--muted);border-left:2px solid var(--line);padding-left:15px}.bet-map{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line);margin:25px 0}.bet-map>div{padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.bet-map h3{color:var(--blue);font-size:20px}.bet-map p{font-size:15px;margin:12px 0}.bet-map span{display:block;color:var(--muted);font-size:13px;line-height:1.8}.year-tabs button{flex:1;font-size:22px;padding:12px 7px}.year-tabs small{font-size:12px;margin-left:8px}.evolution-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:21px 0}.evolution-grid>div{padding:23px 18px;background:var(--canvas);border-top:3px solid #a5b8d3;min-height:198px}.evolution-grid h3{font-size:16px}.evolution-grid p{font-size:15px;margin-bottom:0}.evolution-grid .persist{background:#e7eef9;border-color:var(--blue)}.year-role{padding:15px 18px;background:#edf7f6;color:#0c696e;font-size:15px}.scenario-controls{display:grid;grid-template-columns:1fr 1fr;gap:25px;padding:20px 0}.scenario-controls label{font-size:14px;font-weight:600}.scenario-controls select{display:block;width:100%;margin-top:8px;padding:12px 30px 12px 12px;border:1px solid #b7c6d8;border-radius:6px;background:white;color:var(--ink);font-size:14px}.scenario-output{padding:25px;background:var(--canvas);border-left:4px solid var(--blue);margin:12px 0 30px;min-height:210px}.scenario-output h3{font-size:21px}.scenario-output p{font-size:15px}#scenario-product{color:var(--blue)}.sources li{margin-bottom:17px;font-size:13px;overflow-wrap:anywhere}.sources ul{padding-left:21px}.downloads{display:flex;gap:14px;align-items:center;margin-top:28px;font-size:14px}.downloads>a{padding:7px 0}.detail-body code,td code{font-size:.9em;white-space:normal;word-break:break-word}.detail-body p>code{background:var(--canvas);display:inline-block;padding:6px 10px}footer{font-size:12px;color:var(--muted);padding:30px 0 50px}body:has(#sources-details[open]) .sources{scroll-margin-top:40px}
+.thesis>span{display:inline-block}.contract{margin-top:30px;padding:23px 25px;background:#eaf1fb;border-left:4px solid var(--blue)}.contract p{font-size:15px;margin:9px 0}
+@media(min-width:1450px){main{margin-left:calc(50% - 435px)}}
+@media(max-width:1000px){.sidebar{width:180px;padding:25px 15px}main{width:calc(100% - 220px);margin-left:200px;margin-right:20px}h1{font-size:39px}.classification{gap:15px;grid-template-columns:1fr}.classification p{margin:5px 0 13px}.chain{grid-template-columns:repeat(3,1fr)}.chain>div{border-bottom:1px solid var(--line)}.evolution-grid{grid-template-columns:1fr}.evolution-grid>div{min-height:unset}.bet-map>div{padding:18px}.case-grid{gap:17px}.layer{flex-direction:column;align-items:start;gap:4px}.bug-demo{padding:20px 10px;gap:6px}.bug-text{font-size:13px}.year-tabs small{display:block;margin:0}}
+@media(max-width:700px){html{scroll-padding-top:10px}.sidebar{position:relative;width:100%;height:auto;padding:17px 20px;border-right:0;border-bottom:1px solid var(--line)}.sidebar .brand{margin:0 0 12px;font-size:16px}.sidebar nav{display:flex;gap:7px;overflow:auto;white-space:nowrap}.sidebar a{font-size:12px;padding:5px 8px;border-left:0;border-bottom:2px solid transparent}.sidebar .bottom{display:none}main{width:auto;margin:0 20px}section,section.hero{padding:38px 0}h1{font-size:30px;letter-spacing:-.7px}h2{font-size:25px}.thesis{font-size:24px}.dateline{font-size:11px}.specialties{grid-template-columns:1fr}.lead{font-size:18px}.layer{padding:17px 18px}.classification{padding-bottom:0}.causal{gap:10px;font-size:13px}.case-grid{grid-template-columns:1fr;min-height:245px}.bug-demo{grid-template-columns:1fr 1fr}.bug-text{grid-column:1 / -1;grid-row:2}.bug-demo>div:last-child{grid-column:2;grid-row:1}.bug-demo small{font-size:12px}.matrix{width:96px}.matrix i{line-height:38px}.detail-body{padding:8px 14px 17px}.detail-body table{min-width:620px}.deep>summary{padding:14px;font-size:14px}.bet-map{grid-template-columns:1fr}.chain-gates{gap:10px;font-size:11px}.scenario-controls{grid-template-columns:1fr;gap:16px}.scenario-output{padding:20px;min-height:270px}.table-scroll table{min-width:600px}.classification b{font-size:17px}footer{padding-bottom:25px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media print{.sidebar,.downloads,.filter,.step-tabs,.year-tabs,.scenario-controls{display:none!important}main{margin:0;width:100%;max-width:none}body{font-size:10pt;line-height:1.6}h1{font-size:27pt}h2{font-size:19pt}h3{font-size:12pt}section,section.hero{padding:20px 0;break-inside:auto}p{margin:9px 0}.table-scroll{overflow:visible}table{font-size:9pt}.table-scroll table{min-width:0!important}th,td{padding:8px}tr{break-inside:avoid}.deep{border:0}.deep>summary{padding:8px 0;background:none}.detail-body{padding:0}details:not([open])>div,details:not([open])>p{display:block!important}.caption{font-size:9pt}.sources li{font-size:8pt}.hero .layers{break-inside:avoid}.scenario-output{min-height:0}.evolution-grid>div{min-height:0}a{text-decoration:none;color:inherit}}
+</style></head><body><aside class="sidebar"><div class="brand">Coding Agent<br>的产品边界</div><nav aria-label="研究导航"><a href="#judgment">主判断</a><a href="#structure">任务结构</a><a href="#objects">19 个对象</a><a href="#case">真实任务</a><a href="#chain">生产链与十问</a><a href="#bets">战略下注</a><a href="#evolution">2026→2030</a><a href="#forks">分叉与反证</a><a href="#evidence">证据索引</a></nav><div class="bottom">事实截至 2026-10-05<br>未来形态为研究判断<br>交互图为因果示意</div></aside><main>
+<section id="judgment" class="hero">
+<p class="dateline">研究截至 2026 年 10 月 5 日　｜　预测至 2030 年</p>
+<h1>Coding Agent<br>会被通用 Agent 吞并吗？</h1>
+<p class="thesis">专业产品会留下。<br><span>通用入口会融合，</span><span>工程责任会分层。</span></p>
+<p>未来 2～4 年，“帮你写代码”的独立产品会收缩。能理解既有系统、验证变更、控制上线并持续维护的专业平台，会继续被工程团队单独评估和采购。</p>
+<div class="layers" aria-label="未来产品结构示意">
+ <div class="layer intent"><b>通用工作入口</b><span>目标 · 业务上下文 · 跨工具协作</span></div>
+ <div class="connector">向下委派目标，向上交付证据</div>
+ <div class="layer shared"><b>共享执行底座</b><span>规划 · 记忆 · 调度 · 沙箱 · 权限</span></div>
+ <div class="specialties"><div class="layer software"><b>软件工程执行层</b><span>程序语义 · 测试 · 集成 · 发布</span></div><div class="layer other"><b>其他领域执行层</b><span>财务 · 设计 · 研究 · 运营</span></div></div>
+</div>
+<p class="caption">结构预测：独立的专业类别，不要求独立聊天框、独立模型或独立公司。</p>
+</section>
+
+<section id="structure">
+<h2>先看任务的结构</h2>
+<p class="lead">决定自治程度的，是状态能否隔离、结果能否验证、后果能否恢复。</p>
+<p>Coding 是工作领域，Work 是任务范围，Computer Use 是操作方式。三者不在同一条分类轴上。</p>
+<div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>任务结构</th>
+<th>修改一个已有软件功能</th>
+<th>完成一项通用知识工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态</td>
+<td>源码、依赖版本、构建环境、数据与线上配置</td>
+<td>文档、表格、邮件、业务系统、人员承诺</td>
+</tr>
+<tr>
+<td>可见性</td>
+<td>文件与日志较容易读取；运行时和业务规则仍可能缺失</td>
+<td>跨系统分散，部分语义只存在于组织惯例中</td>
+</tr>
+<tr>
+<td>可隔离性</td>
+<td>常能复制代码与环境，在分支中试错</td>
+<td>草稿可复制；已发邮件、付款、改库存不能靠复制恢复</td>
+</tr>
+<tr>
+<td>验证</td>
+<td>编译、类型、测试提供密集反馈；需求与线上行为不能被穷尽</td>
+<td>算账、对账、字段规则可精确检查；观点、说服力往往较难</td>
+</tr>
+<tr>
+<td>完成条件</td>
+<td>一个可审计、可验证、可发布的状态变更</td>
+<td>一个被接受的交付物，或被正确执行的业务状态变更</td>
+</tr>
+</tbody>
+</table></div>
+<div class="causal"><b>可复制的环境</b><span>→</span><b>低成本试错</b><span>→</span><b>执行式反馈</b><span>→</span><b>持续修正</b></div>
+<p>软件经常具备这条反馈链，因此先成为 Agent 的训练场。通用工作也会采用同样的方法。</p>
+<p class="callout">“测试稳定通过”只说明这些断言成立。它不等于全部需求正确，更不等于上线安全。财务对账有时比前端交互需求更确定。</p>
+<details class="deep"><summary>展开任务结构的完整推理</summary><div class="detail-body"><p>Coding Agent 是按工作领域命名；Work Agent 是按任务范围命名；Computer Agent 是按操作方式命名。三者不在同一条分类轴上。Coding Agent 可以操作浏览器，Work Agent 可以调用编译器，Computer Agent 也可以执行专业工程流程。</p>
+<p>最有解释力的变量只有三个：<strong>状态能否隔离、结果能否验证、外部后果能否恢复。</strong></p>
+<div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>任务结构</th>
+<th>修改一个已有软件功能</th>
+<th>完成一项通用知识工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态</td>
+<td>源码、依赖版本、构建环境、数据与线上配置</td>
+<td>文档、表格、邮件、业务系统、人员承诺</td>
+</tr>
+<tr>
+<td>可见性</td>
+<td>文件与日志较容易读取；运行时和业务规则仍可能缺失</td>
+<td>跨系统分散，部分语义只存在于组织惯例中</td>
+</tr>
+<tr>
+<td>可隔离性</td>
+<td>常能复制代码与环境，在分支中试错</td>
+<td>草稿可复制；已发邮件、付款、改库存不能靠复制恢复</td>
+</tr>
+<tr>
+<td>验证</td>
+<td>编译、类型、测试提供密集反馈；需求与线上行为不能被穷尽</td>
+<td>算账、对账、字段规则可精确检查；观点、说服力往往较难</td>
+</tr>
+<tr>
+<td>完成条件</td>
+<td>一个可审计、可验证、可发布的状态变更</td>
+<td>一个被接受的交付物，或被正确执行的业务状态变更</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>关键因果：软件经常可以在低成本的副本中反复试验，因此 Agent 容易形成“修改→执行→反馈→修复”的闭环。</strong>这使 Coding 成为通用 Agent 的训练场和工程样板，不会使它成为永远封闭的物种。</p>
+<p>但“软件具有确定性”是过度简化。并发、时钟、网络、概率模型、数据分布都会影响执行。即使测试完全可重复，它也只确定地回答“这些断言是否成立”，不能确定地回答“全部需求是否正确”。财务对账的规则有时比前端交互需求更确定。<a class="cite" href="#source-20" aria-label="查看来源 S20">[20]</a><a class="cite" href="#source-21" aria-label="查看来源 S21">[21]</a></p>
+<p>从这里可以推出两件事：通用工作会逐渐采用版本、沙箱、检查与审批；Coding 的剩余特殊性会集中到程序语义、工具链和生产系统，而非聊天形式。</p></div></details>
+</section>
+
+<section id="objects">
+<h2>19 个对象，多数是通用系统问题</h2>
+<div class="classification"><div><span class="tag A">A</span><b>软件语义</b><p>源码、类型与可执行行为的对应关系；其他对象里的软件专用机制。</p></div><div><span class="tag B">B</span><b>通用约束</b><p>状态、并行、验证、权限、恢复与长任务。软件工程把它们做得更早。</p></div><div><span class="tag C">C</span><b>可替换的包装</b><p>Git 协议与操作、PR 页面。界面能隐藏，其治理作用仍需保留。</p></div></div>
+<p>专业产品不需要“每项机制都独有”。一组高密度、相互耦合的机制，就能形成专业系统。</p>
+<details class="deep"><summary>逐项查看 19 个对象的判断</summary><div class="detail-body">
+<div class="filter" aria-label="筛选分类"><button class="selected" data-filter="all" aria-pressed="true">全部 19</button><button data-filter="A" aria-pressed="false">A 软件语义 1</button><button data-filter="B" aria-pressed="false">B 通用约束 16</button><button data-filter="C" aria-pressed="false">C 历史包装 2</button></div>
+<p class="caption">按底层问题给一个主类；行内保留次级语义。A 的专用机制也存在于多个 B 类对象中。</p>
+<div class="table-scroll" tabindex="0"><table id="object-table"><thead><tr><th>对象</th><th>主类</th><th>保留与迁移</th></tr></thead><tbody><tr data-category="B"><td>repository</td><td><span class="tag B">B</span></td><td>持久、可寻址、可版本化的工作材料边界具有通用性。单 repo 等于一个任务只是今天常见的包装。</td></tr><tr data-category="A"><td>source code state</td><td><span class="tag A">A</span></td><td>程序文本与可执行语义、类型、接口、运行行为的对应关系需要软件专用处理；“管理文件版本”本身是 B。</td></tr><tr data-category="B"><td>dependency graph</td><td><span class="tag B">B</span></td><td>工作都有依赖；构建图、包解析、调用图需要 A 类适配。业务依赖图与代码依赖图不能混为一个图。</td></tr><tr data-category="C"><td>git</td><td><span class="tag C">C</span></td><td>Git 的命令、对象格式和协作惯例可被替换；可追溯版本、并发隔离、历史证明不能删除。预测期内 Git 仍将广泛存在。</td></tr><tr data-category="B"><td>commit</td><td><span class="tag B">B</span></td><td>一个可追溯的变更检查点是通用需求；SHA、提交消息与手动提交节奏是具体实现。commit 也不自动代表通过验证。</td></tr><tr data-category="B"><td>branch</td><td><span class="tag B">B</span></td><td>隔离候选方案、允许并行试验是通用需求；分支名、切分支操作可退到后台。</td></tr><tr data-category="B"><td>merge</td><td><span class="tag B">B</span></td><td>把并行变更纳入共享状态是通用一致性问题；代码的语义冲突需要 A 类检查。文本无冲突不等于行为无冲突。</td></tr><tr data-category="C"><td>PR</td><td><span class="tag C">C</span></td><td>今天的页面和“每件事一个 PR”可变化；变更提案、证据、审批、责任记录仍是 B。</td></tr><tr data-category="B"><td>review</td><td><span class="tag B">B</span></td><td>对结果、风险、规则进行独立评估是通用需求；代码路径、兼容性、安全性的审查有专用语义。</td></tr><tr data-category="B"><td>tests</td><td><span class="tag B">B</span></td><td>检查输出是否满足约束并非 Coding 独有；单元、集成、契约、性质测试的工具与覆盖策略需要软件适配。</td></tr><tr data-category="B"><td>CI</td><td><span class="tag B">B</span></td><td>变更触发自动检查、留下证据是通用模式；流水线文件与构建步骤是当前实现。</td></tr><tr data-category="B"><td>deployment</td><td><span class="tag B">B</span></td><td>把候选状态推进真实使用环境是通用问题；软件发布包含制品、配置、数据库迁移的专用机制。</td></tr><tr data-category="B"><td>production environment</td><td><span class="tag B">B</span></td><td>所有能修改真实世界状态的 Agent 都面对生产环境；软件服务的流量、SLO、兼容性是其特化。</td></tr><tr data-category="B"><td>observability</td><td><span class="tag B">B</span></td><td>必须知道动作是否产生预期后果；软件的日志、指标、trace 只是更成熟的一套实现。</td></tr><tr data-category="B"><td>secrets</td><td><span class="tag B">B</span></td><td>任何接入账户、支付、企业系统的 Agent 都需要凭据管理；应授予能力与短期凭据，而非把密钥塞进上下文。</td></tr><tr data-category="B"><td>permission</td><td><span class="tag B">B</span></td><td>谁可读写什么、能否对外生效、谁承担责任，是所有执行型 Agent 的约束。</td></tr><tr data-category="B"><td>rollback</td><td><span class="tag B">B</span></td><td>失败恢复是通用问题；代码回退不等于撤销数据库写入、已发通知或用户损失。有些动作只能补偿。</td></tr><tr data-category="B"><td>deterministic verification</td><td><span class="tag B">B</span></td><td>数学、账务、格式、约束都可程序化验证；软件只是可检查接口更丰富。确定的判定过程不代表完备的判定标准。</td></tr><tr data-category="B"><td>long-running tasks</td><td><span class="tag B">B</span></td><td>持久状态、恢复、外部事件唤醒、预算和退出条件是通用需求；增加上下文长度不能独自解决。</td></tr></tbody></table></div>
+<p>Git 与 PR 既是历史包装，也是当前互操作和组织治理协议。预测期内，隐藏操作比替换整个生态更经济。</p>
+</div></details>
+</section>
+
+<section id="case">
+<h2>同一个 Bug，不同的是固定了多少坐标</h2>
+<p class="lead">真实任务：Astropy 的嵌套模型误判了变量依赖。</p>
+<p>两个独立线性模型，直接组合正确；嵌套后却被报告为相互依赖。原始 <a href="https://github.com/astropy/astropy/issues/12906">Issue #12906</a> 与 <a href="https://github.com/astropy/astropy/pull/12907/files">修复 #12907</a> 可查。</p>
+<div class="bug-demo"><div><small>应该保留的独立关系</small><div class="matrix" aria-label="对角为真，非对角为假"><i>1</i><i class="zero">0</i><i class="zero">0</i><i>1</i></div></div><div class="bug-text">只改变组合的嵌套方式<br><b>独立关系不应改变</b></div><div><small>Bug 错误报告的关系</small><div class="matrix wrong" aria-label="四项全为真"><i>1</i><i>1</i><i>1</i><i>1</i></div></div></div>
+<p class="caption">简化显示完整结果矩阵右下方 2×2 部分。1 表示依赖，0 表示独立。</p>
+<div class="step-tabs" role="group" aria-label="选择任务阶段"><button data-step="0" class="selected" aria-pressed="true">接任务</button><button data-step="1" aria-pressed="false">建环境</button><button data-step="2" aria-pressed="false">改与验</button><button data-step="3" aria-pressed="false">交付</button></div>
+<div class="case-grid" aria-live="polite"><div><h3>已配置 Coding Harness</h3><p id="coding-state"></p></div><div><h3>尚未配置工程适配的通用 Agent</h3><p id="general-state"></p></div></div>
+<p class="caption">同模型、同预算、同工具授权下的机制推演；未实际运行两款产品做对照实验。</p>
+<div class="state-line"><b>有效工作状态</b><span>源码快照</span><span>依赖与工具链</span><span>验证条件</span><span>外部状态</span><span>授权范围</span></div>
+<p>通用 Agent 加载相同工程适配后，两条路线会收敛。<b>这证明适配可复用，没有证明适配可省去。</b></p>
+<details class="deep"><summary>展开真实任务与状态空间分析</summary><div class="detail-body"><p><strong>原始任务：Astropy #12906。</strong>同样两个独立的线性模型，直接组合时被正确识别为独立；放进嵌套组合后，<code>separability_matrix</code> 却错误地报告相互依赖。真实修复位于 PR #12907。<a class="cite" href="#source-19" aria-label="查看来源 S19">[19]</a></p>
+<p>以下是基于真实 Issue 的<strong>执行机制推演</strong>，不是本研究实际运行两个 Agent 的对照实验。为公平比较，假设底层模型相同，拥有相同预算及可授权的工具。</p>
+<div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>状态变化</th>
+<th>已配置的 Coding Harness</th>
+<th>尚未配置工程适配的通用 Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收到需求</td>
+<td>Issue 绑定源码基线、项目说明与工作目录</td>
+<td>先确认项目、版本、代码位置和允许的修改范围</td>
+</tr>
+<tr>
+<td>建立环境</td>
+<td>在指定工具链中安装依赖并跑基线</td>
+<td>找运行方式与依赖；单凭错误截图不能确定环境是否正确</td>
+</tr>
+<tr>
+<td>缩小问题</td>
+<td>把嵌套与非嵌套结果对照，定位组合矩阵逻辑</td>
+<td>也能做到，但必须主动构建同一套可执行复现</td>
+</tr>
+<tr>
+<td>修改后检查</td>
+<td>新增回归测试，检查受影响的组合情况，跑相关测试</td>
+<td>若停在“解释合理、文件已改”，仍未进入可验证的交付状态</td>
+</tr>
+<tr>
+<td>交付</td>
+<td>带基线、diff、测试证据的候选变更，进入审查与 CI</td>
+<td>要达到同等交付标准，必须补齐版本、证据与审查接口</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>差异不是 Coding Agent 面对更小的世界，而是 Harness 预先固定了更多坐标。</strong>可把有效工作状态写成：</p>
+<p><code>S = 源码快照 × 依赖与工具链 × 验证条件 × 外部系统状态 × 授权范围</code></p>
+<p>通用 Agent 若只看到“一个代码文件”，这些坐标大多未知；Coding Harness 让它们可寻址、可重建、可比较。通用 Agent 一旦加载相同工程适配，状态空间就会收敛——这支持基础设施复用，却没有证明工程适配可以省去。</p>
+<p>这个案例的验收条件相对明确，而且不需要部署。若任务换成“修复线上结账偶发重复扣款”，同一个 repo 远远不够：还需要支付幂等约束、数据库状态、真实 trace、灰度发布与资金补偿。<strong>专业性随着系统责任增加，而非随着代码行数增加。</strong></p></div></details>
+</section>
+
+<section id="chain">
+<h2>Agent 接手链条，人定义生效条件</h2>
+<div class="chain"><div><b>目标</b><span>需求与约束</span></div><div><b>计划</b><span>定位与分解</span></div><div><b>实现</b><span>修改 ⇄ 测试</span></div><div><b>集成</b><span>审查 ⇄ CI</span></div><div><b>发布</b><span>灰度与部署</span></div><div><b>运行</b><span>观察与恢复</span></div></div>
+<div class="chain-gates"><span>人：定义目标、预算、验收</span><span>策略：证据、权限、风险额度</span><span>反馈：回到计划和修复</span></div>
+<p class="lead">全链路执行会成为标准能力。全链路授权仍由组织决定。</p>
+<p>人不必手拆每个改动，但必须划分责任。Agent 可生成执行计划；它不能凭空决定公司愿意牺牲多少兼容性、收入和维护成本。</p>
+<p class="callout">生成越来越便宜后，瓶颈移向验证、集成与上线。应比较“一个被接受且在线上成立的变更总成本”，包括人工审查、返工与故障。</p>
+<details class="deep"><summary>展开三个闭环、长任务机制与成本约束</summary><div class="detail-body"><p><code>需求与约束 → 系统定位 → 分解与计划 → 隔离实现 ⇄ 测试与修复 → 变更审查 → 合并与 CI → 灰度部署 → 观察与恢复 ↺</code></p>
+<p>链条里有三种闭环，不能用一个“自动完成”覆盖：</p>
+<div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>闭环</th>
+<th>Agent 将承担什么</th>
+<th>人或组织策略仍要定义什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实现闭环</td>
+<td>查找、修改、编译、测试、修复；处理大多数机械步骤</td>
+<td>需要满足的行为与不可破坏的约束</td>
+</tr>
+<tr>
+<td>集成闭环</td>
+<td>分解依赖、安排顺序、处理 review、CI 与并行冲突</td>
+<td>系统边界、跨团队取舍、变更归属</td>
+</tr>
+<tr>
+<td>生产闭环</td>
+<td>生成发布计划、灰度观察、归因、暂停、回退或补偿</td>
+<td>风险额度、部署权限、不可逆动作与责任人</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Agent 会负责整条链的编排与大部分执行；获得全链路能力，不等于获得无条件全链路授权。</strong>一个系统可连续推进任务，同时在风险边界等待批准或按预先批准的策略执行。审批不必发生在每次工具调用。</p>
+<p>真正的长期任务不会始终占用一个大聊天窗口。它需要可持久化的任务图、环境与证据，等待 CI 或 review 时释放计算，被事件唤醒后继续。Anthropic 的长任务实验采用进度文件、功能清单与 Git 状态桥接会话；Cursor Projects 已把共享上下文和事件订阅作为工作机制。<a class="cite" href="#source-5" aria-label="查看来源 S5">[5]</a><a class="cite" href="#source-6" aria-label="查看来源 S6">[6]</a></p>
+<p><strong>人不再需要手动拆每一个 Coding Task，但仍需要分解责任。</strong>Agent 能拆“改哪几个文件”，也会越来越能拆“怎样迁移 300 个服务”；它无法从空白中得知公司愿意牺牲多少兼容性、收入或维护成本。人给目标、约束、预算与验收；Agent 给出并不断重写执行计划。</p>
+<p>分支能隔离文件写入，不能隔离共享数据与跨服务行为。并行 Agent 增多会把压力推向集成与验证。让同一个 Agent 编写实现、自由修改验收测试、再宣布通过，会形成自证循环；独立验证需要外部规格、受保护的判据与真实运行证据，多开一个审查 Agent 并不自动消除相关错误。</p>
+<p>生产吞吐量的约束可直观写为：</p>
+<p><code>可靠交付速度 ≤ 生成、验证、集成、发布四环节中最慢的一环</code></p>
+<p>所以应比较“每个被接受且在线上成立的变更总成本”，其中包括模型、环境、人类审查、返工和故障损失。PR 数、token 数、无人运行时长都不能单独代表产能。METR 的 2025 年小样本随机实验发现，熟悉自己仓库的开发者使用当时的工具反而更慢；这只能证明需要测总成本，不能直接外推为 2026 年 Agent 的效率结论。<a class="cite" href="#source-22" aria-label="查看来源 S22">[22]</a></p></div></details>
+<h3 class="subheading">你提出的十个问题</h3>
+<div class="questions"><details class="question"><summary><span>IDE 会退到后台吗？</span><strong>会。</strong>从默认生产入口退为检查、调试与精细干预工具。</summary><p>人从逐行操作转向监督多项任务；复杂诊断仍需要空间化、结构化的专业界面。</p></details><details class="question"><summary><span>CLI 为什么重新重要？</span><strong>它会成为 Agent 的通用执行接口之一。</strong></summary><p>命令可组合、可脚本化、可远程运行，并提供退出码与文本反馈；现有工具链无需逐个重做 GUI 集成。CLI 流行不等于人要重新背命令，结构化 API 有时更可靠。</p></details><details class="question"><summary><span>Chat 会成为主入口吗？</span><strong>会成为人类发起与纠偏的主入口；不会独自承载全部生产。</strong></summary><p>目标适合语言表达，状态和证据适合任务板、diff、预览与指标；大量后台任务还会由事件触发。</p></details><details class="question"><summary><span>Cloud Agent 会成为默认 runtime 吗？</span><strong>会，面向可标准化的软件任务，异步隔离环境会成为默认。</strong></summary><p>并行、续跑、资源调度与环境复用优于绑定个人电脑；私网、硬件、移动设备保留本地或客户自管执行。这里的云默认不等于供应商公有云垄断。</p></details><details class="question"><summary><span>repo 还是核心工作单元吗？</span><strong>不再是顶层工作单元；仍是关键工程材料与治理边界。</strong></summary><p>顶层变成有目标、任务图、证据、权限与环境的 Project/Change；一件事可跨多个 repo，也可只改配置或数据。</p></details><details class="question"><summary><span>人还要手动拆 Coding Task 吗？</span><strong>大多数常规任务不需要；组织与产品责任仍需人定界。</strong></summary><p>技术分解可动态生成；相互矛盾的目标、跨团队承诺与验收标准不能靠机械拆分解决。</p></details><details class="question"><summary><span>Agent 会负责需求到部署整条链吗？</span><strong>会。</strong>整链编排与执行成为标准能力。</summary><p>风险分级授权与外部验证决定哪些步骤自动生效；“负责执行”不等于承担法律或组织责任。</p></details><details class="question"><summary><span>Coding-specific Harness 还剩什么？</span><strong>程序语义、可重建环境、变更集成、独立验证、发布与运行反馈。</strong></summary><p>通用循环可以复用；符号/类型/接口、依赖与构建、受影响测试、迁移兼容、线上归因需要专业机制。它们可作为插件、服务或独立平台存在。</p></details><details class="question"><summary><span>最终边界在哪里？</span><strong>Work 层管理目标和跨业务流程；Coding 层管理软件变更的正确性与生效条件。</strong></summary><p>边界是可交付的状态变更契约，不是是否生成了代码。同一个进程或产品可以包含两层。</p></details><details class="question"><summary><span>2027 / 2028 / 2030 最可能的形态？</span><strong>2027 多入口任务台；2028 通用入口调度专业运行环境；2030 通用工作空间 + 软件生产专业平台。</strong></summary><p>统一目标入口降低切换成本；软件变更的验证、治理、维护保留专业经济性。</p></details></div>
+<div class="contract"><h3>两层之间，交付一份“变更契约”</h3><p><b>输入：</b>基线、目标、限制、预算与权限。</p><p><b>输出：</b>变更、可复现验证、已知风险、上线与恢复条件。</p><p>通用 Agent 不必理解每个工程细节，必须能请求、检查并持续追踪这份契约。</p></div>
+</section>
+
+<section id="bets">
+<h2>公司下注的，是不同的控制位置</h2>
+<p>模型能力会扩散。更持久的位置，来自掌握目标、运行环境、变更记录或验证证据。</p>
+<div class="bet-map">
+<div><h3>先掌握用户目标</h3><p><b>OpenAI、Anthropic、TRAE、通用 Work Agent</b></p><p>从通用上下文调度软件能力；Coding 同时是通向数字工作的入口。</p><span>成立条件：跨工具工作不丢失状态、权限和工程深度。</span></div>
+<div><h3>先掌握软件交付</h3><p><b>Cursor、Cognition</b></p><p>从项目、代码、环境走向持续的软件生产；专业深度支撑独立采购。</p><span>成立条件：模型趋同时，仍能降低验证、集成和运行成本。</span></div>
+<div><h3>先掌握协作与准入</h3><p><b>GitHub Copilot</b></p><p>让不同 Agent 都进入企业已有的代码、检查、权限与合并体系。</p><span>成立条件：软件变更仍需要共同的记录与治理平台。</span></div>
+<div><h3>先控制执行环境，或开放它</h3><p><b>Replit、Google、OpenHands / Cline</b></p><p>Replit 把创建与运行连起来；Google 多入口分发；开放路线把模型、界面与执行拆开。</p><span>这是三条不同路线，分别押注环境控制、分发与可替换性。</span></div>
+</div>
+<p class="caption">战略地图为研究推断，不是内部路线图。每家公司会占据多个位置，图示突出其最有解释力的选择。</p>
+<details class="deep"><summary>逐家公司展开：事实、下注与成立条件</summary><div class="detail-body"><p>以下“下注”是对公开产品与系统选择的分析，不是公司内部路线图。事实用于判断资源投向，不采用厂商自报的效率倍数作为横向排名。</p>
+<div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>公司 / 路线</th>
+<th>可核验的选择</th>
+<th>实际下注与成立条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI / Codex</td>
+<td>当前 Codex 连接 ChatGPT、CLI、编辑器与云环境，包含 PR review 和插件；同时经营 ChatGPT Work。<a class="cite" href="#source-1" aria-label="查看来源 S1">[1]</a><a class="cite" href="#source-2" aria-label="查看来源 S2">[2]</a></td>
+<td><strong>模型与通用工作入口能承接软件生产。</strong>用 Coding 获得高密度执行反馈，再扩展到跨工具工作。要成立，任务上下文、权限和执行状态必须跨入口延续，通用平台还需保持工程深度。</td>
+</tr>
+<tr>
+<td>Anthropic / Claude Code</td>
+<td>Code SDK 已更名 Agent SDK，明确支持研究、财务、个人助理；2026-09 宣布 Cowork 与 Chat 融合。<a class="cite" href="#source-3" aria-label="查看来源 S3">[3]</a><a class="cite" href="#source-4" aria-label="查看来源 S4">[4]</a></td>
+<td><strong>给强模型一台可操作的计算机与好的执行循环，就能扩展到大多数数字工作。</strong>技术栈可通用，Claude Code 仍承担开发者的高带宽接口。胜负取决于长任务状态与验证，不是“终端天然只适合程序员”。</td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td>2026-09 Projects 覆盖跨月工作、自动分解与事件订阅；Rollouts 延伸到 PR 后的上线观察；执行可位于客户管理的机器。<a class="cite" href="#source-6" aria-label="查看来源 S6">[6]</a><a class="cite" href="#source-7" aria-label="查看来源 S7">[7]</a><a class="cite" href="#source-8" aria-label="查看来源 S8">[8]</a></td>
+<td><strong>专业软件生产的深度足以支撑独立工作台。</strong>IDE 的价值转向系统上下文、并行变更管理与生产闭环。必须在模型趋同后，仍显著降低验证、集成和上线成本。</td>
+</tr>
+<tr>
+<td>GitHub Copilot</td>
+<td>Agent HQ 把多家 Agent 纳入 GitHub 治理；当前 Copilot App 把 Issue、隔离 workspace、review 与 merge 连接起来。<a class="cite" href="#source-9" aria-label="查看来源 S9">[9]</a><a class="cite" href="#source-10" aria-label="查看来源 S10">[10]</a></td>
+<td><strong>模型可以更换，企业代码的记录与准入平台更难更换。</strong>GitHub 押注所有 Agent 最终都要经过代码、权限、检查与合并的关口，分发和治理可比写代码本身更持久。</td>
+</tr>
+<tr>
+<td>TRAE</td>
+<td>官网并列 TraeCode 与 TraeWork；Work 文档包含 Work、Code、Design 模式和本地/云任务。<a class="cite" href="#source-11" aria-label="查看来源 S11">[11]</a></td>
+<td><strong>Coding 验证过的执行能力可成为通用工作的底座，并保留专业开发入口。</strong>若普通用户只写临时脚本，通用入口足够；持续维护现有软件则仍需工程上下文。要看这些模式能否共享状态与可靠性，而非看模式数量。</td>
+</tr>
+<tr>
+<td>Google / Gemini CLI、Antigravity、Jules</td>
+<td>CLI 从发布时就覆盖 Coding、研究与任务；Antigravity 采用编辑器与 Agent 管理界面；Jules 提供异步云执行。<a class="cite" href="#source-12" aria-label="查看来源 S12">[12]</a><a class="cite" href="#source-13" aria-label="查看来源 S13">[13]</a><a class="cite" href="#source-14" aria-label="查看来源 S14">[14]</a></td>
+<td><strong>开放执行接口、任务工作台、云环境可共同扩大模型分发。</strong>CLI 是可嵌入的执行入口，管理界面承接人类监督。Google 的多入口是多条下注；公开事实不足以断言它们已统一成一个系统。</td>
+</tr>
+<tr>
+<td>Cognition / Devin、Windsurf</td>
+<td>Devin Desktop 把 Windsurf 的 IDE 基础改造成 Agent 管理中心；云系统着重状态恢复、企业接入与治理。<a class="cite" href="#source-15" aria-label="查看来源 S15">[15]</a><a class="cite" href="#source-16" aria-label="查看来源 S16">[16]</a></td>
+<td><strong>企业购买的是能持续接活的软件工程产能。</strong>深度适配遗留系统与流程，比拥有聊天流量更重要。要成立，交付收益须覆盖环境建设、review 和组织改造成本。</td>
+</tr>
+<tr>
+<td>Replit</td>
+<td>2026-08 已把日常聊天、分析、设计与复杂构建纳入同一体验；依然连接应用创建与发布。<a class="cite" href="#source-17" aria-label="查看来源 S17">[17]</a></td>
+<td><strong>控制创建到运行的环境，可以把软件制作卖给更广的人群，再扩展为工作入口。</strong>环境越可控，全链自动化越容易；迁入任意遗留企业系统时，这个优势会减弱。</td>
+</tr>
+<tr>
+<td>OpenHands / Cline 等开放路线</td>
+<td>OpenHands 可承接不同 Agent 与本地/远程后端；Cline 同时提供 SDK、IDE 扩展与 CLI。<a class="cite" href="#source-18" aria-label="查看来源 S18">[18]</a></td>
+<td><strong>执行系统与界面可拆卸、可自建，模型供应商无法独占全部 Harness。</strong>会压低基础执行层溢价，也给专业工程层保留多供应商空间。</td>
+</tr>
+<tr>
+<td>通用 Work / Computer Agent</td>
+<td>ChatGPT Work、Claude、Manus 都把跨工具上下文、文件与长期执行用于多类任务；OSWorld 使用执行结果评测计算机任务。<a class="cite" href="#source-2" aria-label="查看来源 S2">[2]</a><a class="cite" href="#source-4" aria-label="查看来源 S4">[4]</a><a class="cite" href="#source-20" aria-label="查看来源 S20">[20]</a><a class="cite" href="#source-23" aria-label="查看来源 S23">[23]</a></td>
+<td><strong>掌握用户目标、业务上下文与授权，便可路由各种专业能力。</strong>Computer Use 解决可达性，API/CLI 解决高效稳定执行；会点击不等于理解系统，更不等于验证交付。</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些下注有共同方向：<strong>Coding 公司正在向通用工作扩展，通用公司正在补齐工程闭环。</strong>竞争发生在谁掌握任务上下文、执行状态和结果验证，而非谁更像 IDE。</p>
+<p>企业仍愿意购买专业层的底层原因是：源码与运行环境高度耦合，发布权限和责任必须明确，历史变更、生产反馈与组织约束需要长期积累。通用平台能承载这些能力，但承载并不会自动产生它们。</p></div></details>
+</section>
+
+<section id="evolution">
+<h2>入口逐渐合并，约束继续存在</h2>
+<p>切换年份，观察能力向通用层迁移。以下为方向性预测，不表示测得的市场份额。</p>
+<div class="year-tabs" role="group" aria-label="演化年份"><button data-year="2026" class="selected" aria-pressed="true">2026 <small>观察</small></button><button data-year="2027" aria-pressed="false">2027 <small>预测</small></button><button data-year="2028" aria-pressed="false">2028 <small>预测</small></button><button data-year="2030" aria-pressed="false">2030 <small>预测</small></button></div>
+<div class="evolution-grid" aria-live="polite"><div><h3>人看到的入口</h3><p id="year-entry"></p></div><div><h3>通用执行底座</h3><p id="year-common"></p></div><div class="persist"><h3>仍需软件特化</h3><p>程序语义、工具链、变更集成、测试适用性、发布兼容与生产反馈。</p></div></div>
+<p id="year-role" class="year-role"></p>
+<p>repo 会从顶层任务单位，变成 Project 内的工程材料与治理边界。IDE 变成按需打开的检查与调试视图。Git、PR、CI 很可能仍在系统下面工作。</p>
+<details class="deep"><summary>展开 2026→2030 产品形态与迁移清单</summary><div class="detail-body"><div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>时间</th>
+<th>通用工作产品</th>
+<th>专业 Coding 产品</th>
+<th>人类主要做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026，已观察</td>
+<td>文件、连接器、计算机操作与长期任务开始汇合</td>
+<td>已从补全走向云执行、Project、review 和发布观察</td>
+<td>提目标、补上下文、反复纠偏、检查证据</td>
+</tr>
+<tr>
+<td>2027，预测</td>
+<td>一个会话可启动文档、分析、软件任务，带持续任务列表</td>
+<td>IDE、CLI、Chat、云任务共享越来越多会话与状态</td>
+<td>定义验收条件，审查高风险变更与失败任务</td>
+</tr>
+<tr>
+<td>2028，预测</td>
+<td>Project 成为目标与上下文容器，按任务挂载专业执行能力</td>
+<td>云/私有运行环境、测试与审查服务、发布控制成为主要付费能力</td>
+<td>管理跨系统目标、权限、预算和例外</td>
+</tr>
+<tr>
+<td>2030，预测</td>
+<td>用户通常表达目标，不先选择 Agent 类别</td>
+<td>独立软件生产平台继续存在，也嵌入通用入口；IDE 作为检查与调试视图按需出现</td>
+<td>定义系统边界、质量标准、风险额度与责任</td>
+</tr>
+</tbody>
+</table></div>
+<p>会向通用层迁移：规划、检索、文件操作、计算机操作、记忆、调度、沙箱、凭据代理、审批与日志。</p>
+<p>会持续特化：程序语义、工具链、代码与依赖变更、测试适用性、跨服务兼容、数据库迁移、制品与部署关系、线上回归归因。</p>
+<p>会大幅隐藏：手动切分支、写机械提交消息、在页面之间搬运 Issue/PR/CI 状态。</p>
+<p>“隐藏”比“删除”更准确。未来人看见的是“这个变更能否发布”，系统下面可能仍然是 Git、CI 和部署平台。</p></div></details>
+</section>
+
+<section id="forks">
+<h2>改变约束，自治边界就会移动</h2>
+<p>这个模拟只表达因果，不预测概率。选择任务的两个条件：</p>
+<div class="scenario-controls"><label>验收条件<select id="verification"><option value="clear">可独立、可重复地验证</option><option value="weak">模糊或主要依赖主观判断</option></select></label><label>外部后果<select id="consequence"><option value="low">可隔离，失败容易恢复</option><option value="high">触及共享生产状态，恢复困难</option></select></label></div>
+<div class="scenario-output" aria-live="polite"><h3 id="scenario-title"></h3><p id="scenario-cause"></p><p id="scenario-product"></p></div>
+<p class="lead">最大的反方：专业能力仍存在，但已便宜到不足以支撑独立产品。</p>
+<p>如果通用平台仅靠可替换的标准组件，就能在真实企业中达到相同交付质量与总成本，企业还普遍取消独立工程 Agent 采购，那么本研究的主判断就被推翻。</p>
+<details class="deep"><summary>展开可证伪标准与关键分叉</summary><div class="detail-body"><p>最强反方是：软件专用能力也能标准化成廉价组件，通用模型会自己发现并使用它们，客户只买通用工作平台。<strong>专业层技术上存在，不保证专业产品商业上独立。</strong>这是主判断中最不确定、也最值得跟踪的一环。</p>
+<p>下面是预先设定的观察标准，<strong>不是现有统计数据</strong>：</p>
+<div class="table-scroll" tabindex="0"><table>
+<thead>
+<tr>
+<th>观察到的事实</th>
+<th>应如何修正结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>在不同企业的既有生产系统中，控制模型、上下文、权限和预算后，通用平台仅靠可替换标准组件，就能连续两个季度达到专业平台相当的交付接受率、事故率与总成本；企业同时普遍取消独立工程 Agent 采购</td>
+<td>推翻“专业 Coding 产品类别继续独立”的主判断，改为“专业能力存在，但产品类别被吸收”。</td>
+</tr>
+<tr>
+<td>到 2028 年，大量常规改动仍依赖人手动定位文件、设计测试、拆任务、处理 CI；总审查与返工成本未随模型提升下降</td>
+<td>下调自治、Chat 主入口与整链执行预测；专业产品会更久保持交互式辅助形态。</td>
+</tr>
+<tr>
+<td>远程环境无法经济地复制大多数真实工具链，任务主要依赖个人设备或专用硬件，远程运行的成本持续高于节省的人力</td>
+<td>推翻云默认预测，转为本地优先、云端调度的混合结构。</td>
+</tr>
+<tr>
+<td>在生产级改动中，业务规格可稳定转成高覆盖的独立验证，自动灰度与补偿显著降低事故成本</td>
+<td>专业 Harness 更快组件化，纯代码工具更快消失；但这本身还不足以证明独立工程平台会消失。</td>
+</tr>
+</tbody>
+</table></div>
+<p>三个分叉不等概率：<strong>主情景是通用入口与专业平台分层；吞并情景需要验证和企业工程接入同时商品化；慢自治情景则由验证成本与外部后果拖住。</strong>单看模型榜单上升、CLI 很流行、某家公司合并产品名称，都无法判定走到了哪个分叉。</p>
+<p>最终应盯住一个事实：<strong>当用户说“把它做好”，谁持有足够的状态、验证证据与授权，能让这句话可靠地变成生产系统中的变化？</strong>谁能做到，谁就有产品位置。</p></div></details>
+</section>
+
+<section id="evidence">
+<h2>事实与预测分开阅读</h2>
+<p>这份研究使用 23 组证据，关键结论依据官方路线、工程材料、开源实现、原始 Issue 和独立实验。公司“下注”与未来形态是分析推断。</p>
+<p>没有进行跨产品效果实测；没有用搜索摘要或厂商自报效率给产品排名。真实 Issue 的双路线展示是机制推演。</p>
+<details class="deep" id="sources-details"><summary>查看全部来源、日期和证据边界</summary><div class="detail-body sources"><p>检索截止 2026-10-05。主要依据官方工程文章、产品说明、开源实现、原始 Issue 与独立实验。国内检索覆盖 TRAE 官方资料及掘金、知乎、B 站、小红书线索；国外覆盖官方资料、GitHub、研究机构、Reddit 和公开视频线索。社区页面有访问与检索噪声，未用搜索摘要或个案体验支撑关键结论。本研究未进行跨产品实测，也未把厂商自报效率当作独立效果证据。</p>
+<ul>
+<li><strong id="source-1">S1</strong>：<a href="https://openai.com/codex/">OpenAI Codex 当前产品页</a>；<a href="https://openai.com/index/introducing-the-codex-app/">Codex App 发布，2026-02-02</a>。支持多入口、并行任务、云环境、review；不证明全链自主成功率。</li>
+<li><strong id="source-2">S2</strong>：<a href="https://openai.com/chatgpt-work/">ChatGPT Work 当前产品页</a>；<a href="https://openai.com/business/workspace-agents/">Workspace agents</a>。支持通用工作与持续工作流方向。</li>
+<li><strong id="source-3">S3</strong>：<a href="https://claude.com/blog/building-agents-with-the-claude-agent-sdk">Building agents with the Claude Agent SDK，2025-09-29</a>。明确说明 Code Harness 用于非 Coding 任务及 SDK 更名。</li>
+<li><strong id="source-4">S4</strong>：<a href="https://claude.com/blog/cowork-is-now-claude/">Claude Cowork and chat are now one Claude，2026-09-16</a>。支持通用入口融合；不代表 Claude Code 已被取消。</li>
+<li><strong id="source-5">S5</strong>：<a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents，2025-11-26</a>。支持持久进度、环境恢复、增量验证的机制。</li>
+<li><strong id="source-6">S6</strong>：<a href="https://cursor.com/blog/projects">Cursor Projects，2026-09-10</a>。支持跨月 Project、共享上下文、事件订阅与云/本地协作；效果数字为厂商自报，本文未采用。</li>
+<li><strong id="source-7">S7</strong>：<a href="https://cursor.com/blog/rollouts-and-security-reviewer">Cursor Rollouts / Security Reviewer，2026-09-23</a>。支持从 PR 到生产观察；直接流量调整等被标注为后续能力，未写成已上线。</li>
+<li><strong id="source-8">S8</strong>：<a href="https://cursor.com/blog/self-hosted-machines">Cursor 自管机器，2026-09-02</a>。支持托管调度与客户执行环境分离。</li>
+<li><strong id="source-9">S9</strong>：<a href="https://github.blog/news-insights/company-news/welcome-home-agents/">GitHub Agent HQ，2025-10-28</a>。支持多 Agent 治理及 Git/PR/Actions 作为基础。</li>
+<li><strong id="source-10">S10</strong>：<a href="https://github.com/features/ai/github-app">GitHub Copilot App 当前页面</a>。支持 Issue→workspace→验证→merge 的当前产品组织方式。</li>
+<li><strong id="source-11">S11</strong>：<a href="https://www.trae.ai/">TRAE 官网</a>；<a href="https://docs.trae.ai/solo/what-is-trae-solo">What is TraeWork?</a>；<a href="https://docs.trae.ai/ide/trae-solo-is-now-available">TraeWork 更新说明</a>。官网并列 Code/Work；两份官方文档的模式数量有更新差异，以具体页面内容为准，不据此推断架构完全统一。</li>
+<li><strong id="source-12">S12</strong>：<a href="https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/">Gemini CLI 发布，2025-06-25</a>；<a href="https://github.com/google-gemini/gemini-cli">当前开源仓库</a>。支持终端工具从最初就面向多类工作。</li>
+<li><strong id="source-13">S13</strong>：<a href="https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/">Google Antigravity，2025-11-20</a>。支持编辑与管理两类界面、通过可审阅产物监督执行。</li>
+<li><strong id="source-14">S14</strong>：<a href="https://blog.google/technology/google-labs/jules/">Jules，2025-05-20</a>。支持异步云 Coding 路线；不将发布时的状态当作全部当前能力。</li>
+<li><strong id="source-15">S15</strong>：<a href="https://cognition.ai/blog/introducing-devin-desktop">Devin Desktop，2026-06-02</a>。支持从 Windsurf IDE 向 Agent 管理迁移。</li>
+<li><strong id="source-16">S16</strong>：<a href="https://cognition.ai/blog/what-we-learned-building-cloud-agents">Cognition 云 Agent 工程经验，2026-04-23</a>；<a href="https://cognition.ai/blog/series-e">2026-09 路线陈述</a>。支持恢复、治理与企业接入的投入方向；不采纳“容器无法完成工程工作”作为普遍技术定律。</li>
+<li><strong id="source-17">S17</strong>：<a href="https://replit.com/blog/replit-introduces-free-mode">Replit 新体验，2026-08-18</a>。支持 Coding 平台向日常知识工作扩展；未采用其中宣传效率倍数。</li>
+<li><strong id="source-18">S18</strong>：<a href="https://github.com/OpenHands/OpenHands">OpenHands 当前仓库</a>；<a href="https://github.com/cline/cline">Cline 当前仓库</a>。支持 Agent、客户端、运行后端的可拆分与开放实现。</li>
+<li><strong id="source-19">S19</strong>：<a href="https://github.com/astropy/astropy/issues/12906">Astropy Issue #12906，2022-03-03</a>；<a href="https://github.com/astropy/astropy/pull/12907/files">真实修复 PR #12907</a>。用作任务结构示例，未声称在此对照测试产品。</li>
+<li><strong id="source-20">S20</strong>：<a href="https://os-world.github.io/">OSWorld 原始项目与论文入口</a>。通用计算机任务也可以有执行式验收；不等于所有知识工作都可精确评分。</li>
+<li><strong id="source-21">S21</strong>：<a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">SWE-bench Verified 的局限，2026-02-23</a>；<a href="https://openai.com/index/separating-signal-from-noise-coding-evaluations/">Coding 评测噪声审计，2026-07-08</a>。供应商研究指出测试与污染问题，用来限定“榜单=生产能力”的推断。</li>
+<li><strong id="source-22">S22</strong>：<a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR 开发者随机实验，2025-07-10</a>。16 名开发者、246 项任务、当时工具平均耗时增加 19%；样本与时期均有限。</li>
+<li><strong id="source-23">S23</strong>：<a href="https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus">Manus Context Engineering，2025-07-18</a>。支持文件系统、可恢复上下文与通用执行循环的工程共性。</li>
+</ul></div></details>
+<div class="downloads"><a href="data:text/markdown;base64,IyBDb2RpbmcgQWdlbnQg5Lya6KKr6YCa55SoIEFnZW50IOWQnuW5tuWQl++8nwoKKirliKTmlq3ml6XmnJ/vvJoyMDI2LTEwLTA144CC6aKE5rWL56qX5Y+j77yaMjAyN+OAgTIwMjjjgIEyMDMw44CCKioKCioq5Li75Yik5pat77ya5pyq5p2lIDLvvZ40IOW5tO+8jENvZGluZyBBZ2VudCDkvJrnu6fnu63mmK/ni6znq4vnmoTkuJPkuJrkuqflk4HnsbvliKvvvJvpgJrnlKggV29yayBBZ2VudCDkvJrlkLjmlLblroPnmoTlpKfph4/lhaXlj6PkuI7ln7rnoYDorr7mlr3vvIzkvYbml6Dms5XmtojpmaTova/ku7blt6XnqIvnmoTkuJPnlKjmiafooYzlsYLjgILnuq/nsrnigJzluK7kvaDlhpnku6PnoIHigJ3nmoTkuqflk4HkvJrmlLbnvKnvvIzog73lr7nml6LmnInns7vnu5/nmoTlj5jmm7Tnu5PmnpzotJ/otKPnmoTkuqflk4HkvJrnlZnkuIvjgIIqKgoK6L+Z6YeM55qE4oCc54us56uL57G75Yir4oCd77yM5oyH5bel56iL5Zui6Zif5LuN5Lya5Y2V54us6K+E5Lyw44CB6YWN572u44CB6YeH6LSt6L2v5Lu255Sf5Lqn6IO95Yqb77yb5LiN6KaB5rGC5a6D5pyJ54us56uL6IGK5aSp5qGG44CB54us56uL5qih5Z6L5oiW54us56uL5YWs5Y+444CC6Iul5Y+q6Zeu55So5oi35piv5ZCm6L+Y6KaB5omT5byA5LiA5Liq5LiT6Zeo55qEIENvZGluZyBBcHDvvJrotormnaXotorlpJrku7vliqHkuI3pnIDopoHjgIIKCui/meaYr+acieaWueWQkeeahOmihOa1i++8jOS4jeaYr+W3sue7j+ivgeWunueahOW4guWcuuS7veminee7k+iuuuOAgioq6YCa55So5YWl5Y+j5Lya6J6N5ZCI77yM5bel56iL6LSj5Lu75Lya5YiG5bGC44CCKioKCiMjIOWFiOeQhuino+S7u+WKoe+8jOaJjeiDveeQhuino+S6p+WTgQoKQ29kaW5nIEFnZW50IOaYr+aMieW3peS9nOmihuWfn+WRveWQje+8m1dvcmsgQWdlbnQg5piv5oyJ5Lu75Yqh6IyD5Zu05ZG95ZCN77ybQ29tcHV0ZXIgQWdlbnQg5piv5oyJ5pON5L2c5pa55byP5ZG95ZCN44CC5LiJ6ICF5LiN5Zyo5ZCM5LiA5p2h5YiG57G76L205LiK44CCQ29kaW5nIEFnZW50IOWPr+S7peaTjeS9nOa1j+iniOWZqO+8jFdvcmsgQWdlbnQg5Y+v5Lul6LCD55So57yW6K+R5Zmo77yMQ29tcHV0ZXIgQWdlbnQg5Lmf5Y+v5Lul5omn6KGM5LiT5Lia5bel56iL5rWB56iL44CCCgrmnIDmnInop6Pph4rlipvnmoTlj5jph4/lj6rmnInkuInkuKrvvJoqKueKtuaAgeiDveWQpumalOemu+OAgee7k+aenOiDveWQpumqjOivgeOAgeWklumDqOWQjuaenOiDveWQpuaBouWkjeOAgioqCgp8IOS7u+WKoee7k+aehCB8IOS/ruaUueS4gOS4quW3suaciei9r+S7tuWKn+iDvSB8IOWujOaIkOS4gOmhuemAmueUqOefpeivhuW3peS9nCB8CnwtLS18LS0tfC0tLXwKfCDnirbmgIEgfCDmupDnoIHjgIHkvp3otZbniYjmnKzjgIHmnoTlu7rnjq/looPjgIHmlbDmja7kuI7nur/kuIrphY3nva4gfCDmlofmoaPjgIHooajmoLzjgIHpgq7ku7bjgIHkuJrliqHns7vnu5/jgIHkurrlkZjmib/or7ogfAp8IOWPr+ingeaApyB8IOaWh+S7tuS4juaXpeW/l+i+g+WuueaYk+ivu+WPlu+8m+i/kOihjOaXtuWSjOS4muWKoeinhOWImeS7jeWPr+iDvee8uuWksSB8IOi3qOezu+e7n+WIhuaVo++8jOmDqOWIhuivreS5ieWPquWtmOWcqOS6jue7hOe7h+aDr+S+i+S4rSB8Cnwg5Y+v6ZqU56a75oCnIHwg5bi46IO95aSN5Yi25Luj56CB5LiO546v5aKD77yM5Zyo5YiG5pSv5Lit6K+V6ZSZIHwg6I2J56i/5Y+v5aSN5Yi277yb5bey5Y+R6YKu5Lu244CB5LuY5qy+44CB5pS55bqT5a2Y5LiN6IO96Z2g5aSN5Yi25oGi5aSNIHwKfCDpqozor4EgfCDnvJbor5HjgIHnsbvlnovjgIHmtYvor5Xmj5Dkvpvlr4bpm4blj43ppojvvJvpnIDmsYLkuI7nur/kuIrooYzkuLrkuI3og73ooqvnqbflsL0gfCDnrpfotKbjgIHlr7notKbjgIHlrZfmrrXop4TliJnlj6/nsr7noa7mo4Dmn6XvvJvop4LngrnjgIHor7TmnI3lipvlvoDlvoDovoPpmr4gfAp8IOWujOaIkOadoeS7tiB8IOS4gOS4quWPr+WuoeiuoeOAgeWPr+mqjOivgeOAgeWPr+WPkeW4g+eahOeKtuaAgeWPmOabtCB8IOS4gOS4quiiq+aOpeWPl+eahOS6pOS7mOeJqe+8jOaIluiiq+ato+ehruaJp+ihjOeahOS4muWKoeeKtuaAgeWPmOabtCB8CgoqKuWFs+mUruWboOaenO+8mui9r+S7tue7j+W4uOWPr+S7peWcqOS9juaIkOacrOeahOWJr+acrOS4reWPjeWkjeivlemqjO+8jOWboOatpCBBZ2VudCDlrrnmmJPlvaLmiJDigJzkv67mlLnihpLmiafooYzihpLlj43ppojihpLkv67lpI3igJ3nmoTpl63njq/jgIIqKui/meS9vyBDb2Rpbmcg5oiQ5Li66YCa55SoIEFnZW50IOeahOiuree7g+WcuuWSjOW3peeoi+agt+adv++8jOS4jeS8muS9v+Wug+aIkOS4uuawuOi/nOWwgemXreeahOeJqeenjeOAggoK5L2G4oCc6L2v5Lu25YW35pyJ56Gu5a6a5oCn4oCd5piv6L+H5bqm566A5YyW44CC5bm25Y+R44CB5pe26ZKf44CB572R57uc44CB5qaC546H5qih5Z6L44CB5pWw5o2u5YiG5biD6YO95Lya5b2x5ZON5omn6KGM44CC5Y2z5L2/5rWL6K+V5a6M5YWo5Y+v6YeN5aSN77yM5a6D5Lmf5Y+q56Gu5a6a5Zyw5Zue562U4oCc6L+Z5Lqb5pat6KiA5piv5ZCm5oiQ56uL4oCd77yM5LiN6IO956Gu5a6a5Zyw5Zue562U4oCc5YWo6YOo6ZyA5rGC5piv5ZCm5q2j56Gu4oCd44CC6LSi5Yqh5a+56LSm55qE6KeE5YiZ5pyJ5pe25q+U5YmN56uv5Lqk5LqS6ZyA5rGC5pu056Gu5a6a44CCW1MyMF1bUzIxXQoK5LuO6L+Z6YeM5Y+v5Lul5o6o5Ye65Lik5Lu25LqL77ya6YCa55So5bel5L2c5Lya6YCQ5riQ6YeH55So54mI5pys44CB5rKZ566x44CB5qOA5p+l5LiO5a6h5om577ybQ29kaW5nIOeahOWJqeS9meeJueauiuaAp+S8mumbhuS4reWIsOeoi+W6j+ivreS5ieOAgeW3peWFt+mTvuWSjOeUn+S6p+ezu+e7n++8jOiAjOmdnuiBiuWkqeW9ouW8j+OAggoKIyMgMTkg5Liq5a+56LGh77ya5ZOq5Lqb54m55q6K77yM5ZOq5Lqb5Y+q5piv5bel56iL5YGa5b6X5pu05pepCgoqKkHvvJrova/ku7bkuJPmnInnmoTor63kuYnkuI7mnLrliLbjgIJC77ya6YCa55SoIEFnZW50IOS5n+mcgOimgeeahOezu+e7n+mXrumimOOAgkPvvJrku4rlpKnnmoTlhbfkvZPnlYzpnaLmiJbljY/orq7lj6/ku6Xmm7/mjaLjgIIqKuavj+mhuee7meS4gOS4quS4u+exu++8m+mZhOWKoOivtOaYjuS/neeVmeWFtui9r+S7tueJueWMlumDqOWIhuOAguWIhuexu+mSiOWvueW6leWxgumXrumimO+8jOS4jeiDveaKiuKAnOWQjeWtl+mHjOaciSBHaXTigJ3nm7TmjqXliKTkuLrni6zmnInvvIzkuZ/kuI3og73miorkuIDkuKogVUkg5Y+v5pu/5o2i6K+v6K+75oiQ5YW257qm5p2f5Lya5raI5aSx44CCCgp8IOWvueixoSB8IOS4u+exuyB8IOeVmeS4i+S7gOS5iOOAgei/geenu+S7gOS5iCB8CnwtLS18LS0tfC0tLXwKfCByZXBvc2l0b3J5IHwgQiB8IOaMgeS5heOAgeWPr+Wvu+WdgOOAgeWPr+eJiOacrOWMlueahOW3peS9nOadkOaWmei+ueeVjOWFt+aciemAmueUqOaAp+OAguWNlSByZXBvIOetieS6juS4gOS4quS7u+WKoeWPquaYr+S7iuWkqeW4uOingeeahOWMheijheOAgiB8Cnwgc291cmNlIGNvZGUgc3RhdGUgfCBBIHwg56iL5bqP5paH5pys5LiO5Y+v5omn6KGM6K+t5LmJ44CB57G75Z6L44CB5o6l5Y+j44CB6L+Q6KGM6KGM5Li655qE5a+55bqU5YWz57O76ZyA6KaB6L2v5Lu25LiT55So5aSE55CG77yb4oCc566h55CG5paH5Lu254mI5pys4oCd5pys6Lqr5pivIELjgIIgfAp8IGRlcGVuZGVuY3kgZ3JhcGggfCBCIHwg5bel5L2c6YO95pyJ5L6d6LWW77yb5p6E5bu65Zu+44CB5YyF6Kej5p6Q44CB6LCD55So5Zu+6ZyA6KaBIEEg57G76YCC6YWN44CC5Lia5Yqh5L6d6LWW5Zu+5LiO5Luj56CB5L6d6LWW5Zu+5LiN6IO95re35Li65LiA5Liq5Zu+44CCIHwKfCBnaXQgfCBDIHwgR2l0IOeahOWRveS7pOOAgeWvueixoeagvOW8j+WSjOWNj+S9nOaDr+S+i+WPr+iiq+abv+aNou+8m+WPr+i/vea6r+eJiOacrOOAgeW5tuWPkemalOemu+OAgeWOhuWPsuivgeaYjuS4jeiDveWIoOmZpOOAgumihOa1i+acn+WGhSBHaXQg5LuN5bCG5bm/5rOb5a2Y5Zyo44CCIHwKfCBjb21taXQgfCBCIHwg5LiA5Liq5Y+v6L+95rqv55qE5Y+Y5pu05qOA5p+l54K55piv6YCa55So6ZyA5rGC77ybU0hB44CB5o+Q5Lqk5raI5oGv5LiO5omL5Yqo5o+Q5Lqk6IqC5aWP5piv5YW35L2T5a6e546w44CCY29tbWl0IOS5n+S4jeiHquWKqOS7o+ihqOmAmui/h+mqjOivgeOAgiB8CnwgYnJhbmNoIHwgQiB8IOmalOemu+WAmemAieaWueahiOOAgeWFgeiuuOW5tuihjOivlemqjOaYr+mAmueUqOmcgOaxgu+8m+WIhuaUr+WQjeOAgeWIh+WIhuaUr+aTjeS9nOWPr+mAgOWIsOWQjuWPsOOAgiB8CnwgbWVyZ2UgfCBCIHwg5oqK5bm26KGM5Y+Y5pu057qz5YWl5YWx5Lqr54q25oCB5piv6YCa55So5LiA6Ie05oCn6Zeu6aKY77yb5Luj56CB55qE6K+t5LmJ5Yay56qB6ZyA6KaBIEEg57G75qOA5p+l44CC5paH5pys5peg5Yay56qB5LiN562J5LqO6KGM5Li65peg5Yay56qB44CCIHwKfCBQUiB8IEMgfCDku4rlpKnnmoTpobXpnaLlkozigJzmr4/ku7bkuovkuIDkuKogUFLigJ3lj6/lj5jljJbvvJvlj5jmm7Tmj5DmoYjjgIHor4Hmja7jgIHlrqHmibnjgIHotKPku7vorrDlvZXku43mmK8gQuOAgiB8CnwgcmV2aWV3IHwgQiB8IOWvuee7k+aenOOAgemjjumZqeOAgeinhOWImei/m+ihjOeLrOeri+ivhOS8sOaYr+mAmueUqOmcgOaxgu+8m+S7o+eggei3r+W+hOOAgeWFvOWuueaAp+OAgeWuieWFqOaAp+eahOWuoeafpeacieS4k+eUqOivreS5ieOAgiB8CnwgdGVzdHMgfCBCIHwg5qOA5p+l6L6T5Ye65piv5ZCm5ruh6Laz57qm5p2f5bm26Z2eIENvZGluZyDni6zmnInvvJvljZXlhYPjgIHpm4bmiJDjgIHlpZHnuqbjgIHmgKfotKjmtYvor5XnmoTlt6XlhbfkuI7opobnm5bnrZbnlaXpnIDopoHova/ku7bpgILphY3jgIIgfAp8IENJIHwgQiB8IOWPmOabtOinpuWPkeiHquWKqOajgOafpeOAgeeVmeS4i+ivgeaNruaYr+mAmueUqOaooeW8j++8m+a1geawtOe6v+aWh+S7tuS4juaehOW7uuatpemqpOaYr+W9k+WJjeWunueOsOOAgiB8CnwgZGVwbG95bWVudCB8IEIgfCDmiorlgJnpgInnirbmgIHmjqjov5vnnJ/lrp7kvb/nlKjnjq/looPmmK/pgJrnlKjpl67popjvvJvova/ku7blj5HluIPljIXlkKvliLblk4HjgIHphY3nva7jgIHmlbDmja7lupPov4Hnp7vnmoTkuJPnlKjmnLrliLbjgIIgfAp8IHByb2R1Y3Rpb24gZW52aXJvbm1lbnQgfCBCIHwg5omA5pyJ6IO95L+u5pS555yf5a6e5LiW55WM54q25oCB55qEIEFnZW50IOmDvemdouWvueeUn+S6p+eOr+Wig++8m+i9r+S7tuacjeWKoeeahOa1gemHj+OAgVNMT+OAgeWFvOWuueaAp+aYr+WFtueJueWMluOAgiB8Cnwgb2JzZXJ2YWJpbGl0eSB8IEIgfCDlv4Xpobvnn6XpgZPliqjkvZzmmK/lkKbkuqfnlJ/pooTmnJ/lkI7mnpzvvJvova/ku7bnmoTml6Xlv5fjgIHmjIfmoIfjgIF0cmFjZSDlj6rmmK/mm7TmiJDnhp/nmoTkuIDlpZflrp7njrDjgIIgfAp8IHNlY3JldHMgfCBCIHwg5Lu75L2V5o6l5YWl6LSm5oi344CB5pSv5LuY44CB5LyB5Lia57O757uf55qEIEFnZW50IOmDvemcgOimgeWHreaNrueuoeeQhu+8m+W6lOaOiOS6iOiDveWKm+S4juefreacn+WHreaNru+8jOiAjOmdnuaKiuWvhumSpeWhnui/m+S4iuS4i+aWh+OAgiB8CnwgcGVybWlzc2lvbiB8IEIgfCDosIHlj6/or7vlhpnku4DkuYjjgIHog73lkKblr7nlpJbnlJ/mlYjjgIHosIHmib/mi4XotKPku7vvvIzmmK/miYDmnInmiafooYzlnosgQWdlbnQg55qE57qm5p2f44CCIHwKfCByb2xsYmFjayB8IEIgfCDlpLHotKXmgaLlpI3mmK/pgJrnlKjpl67popjvvJvku6PnoIHlm57pgIDkuI3nrYnkuo7mkqTplIDmlbDmja7lupPlhpnlhaXjgIHlt7Llj5HpgJrnn6XmiJbnlKjmiLfmjZ/lpLHjgILmnInkupvliqjkvZzlj6rog73ooaXlgb/jgIIgfAp8IGRldGVybWluaXN0aWMgdmVyaWZpY2F0aW9uIHwgQiB8IOaVsOWtpuOAgei0puWKoeOAgeagvOW8j+OAgee6puadn+mDveWPr+eoi+W6j+WMlumqjOivge+8m+i9r+S7tuWPquaYr+WPr+ajgOafpeaOpeWPo+abtOS4sOWvjOOAguehruWumueahOWIpOWumui/h+eoi+S4jeS7o+ihqOWujOWkh+eahOWIpOWumuagh+WHhuOAgiB8CnwgbG9uZy1ydW5uaW5nIHRhc2tzIHwgQiB8IOaMgeS5heeKtuaAgeOAgeaBouWkjeOAgeWklumDqOS6i+S7tuWUpOmGkuOAgemihOeul+WSjOmAgOWHuuadoeS7tuaYr+mAmueUqOmcgOaxgu+8m+WinuWKoOS4iuS4i+aWh+mVv+W6puS4jeiDveeLrOiHquino+WGs+OAgiB8CgoqKjE5IOmhueS4re+8jOWkmuaVsOWxnuS6jiBC77yb6L+Z5LiN5oSP5ZGz552AIENvZGluZyDkuJPkuJrkuqflk4HmsqHmnInku7flgLzjgIIqKueLrOeri+S6p+WTgeWPr+S7peW7uueri+WcqOKAnOS4gOe7hOmrmOWvhuW6puOAgeebuOS6kuiApuWQiOeahOihjOS4muacuuWItuKAneS5i+S4iu+8jOaXoOmcgOavj+mhueacuuWItumDveWPquWtmOWcqOS6jui/meS4quihjOS4muOAggoK5pyA5a655piT6K+v5Yig55qE5pivIEdpdOOAgVBS77ya5a6D5Lus56Gu5pyJ5Y6G5Y+y5YyF6KOF77yM5L2G5ZCM5pe25om/5ouF5LuK5aSp55qE5LqS5pON5L2c5qCH5YeG5ZKM57uE57uH5rK755CG5Y2P6K6u44CCQWdlbnQg5YWI6ZqQ6JeP6L+Z5Lqb5pON5L2c77yM5q+U6YeN5bu65pW05Liq5Y2P5L2c55Sf5oCB5L6/5a6c5b6X5aSa44CCCgojIyDkuIDmrKHnnJ/lrp7ku7vliqHvvJrnirbmgIHnqbrpl7TliLDlupXlt67lnKjlk6rph4wKCioq5Y6f5aeL5Lu75Yqh77yaQXN0cm9weSAjMTI5MDbjgIIqKuWQjOagt+S4pOS4queLrOeri+eahOe6v+aAp+aooeWei++8jOebtOaOpee7hOWQiOaXtuiiq+ato+ehruivhuWIq+S4uueLrOeri++8m+aUvui/m+W1jOWll+e7hOWQiOWQju+8jGBzZXBhcmFiaWxpdHlfbWF0cml4YCDljbTplJnor6/lnLDmiqXlkYrnm7jkupLkvp3otZbjgILnnJ/lrp7kv67lpI3kvY3kuo4gUFIgIzEyOTA344CCW1MxOV0KCuS7peS4i+aYr+WfuuS6juecn+WuniBJc3N1ZSDnmoQqKuaJp+ihjOacuuWItuaOqOa8lCoq77yM5LiN5piv5pys56CU56m25a6e6ZmF6L+Q6KGM5Lik5LiqIEFnZW50IOeahOWvueeFp+WunumqjOOAguS4uuWFrOW5s+avlOi+g++8jOWBh+iuvuW6leWxguaooeWei+ebuOWQjO+8jOaLpeacieebuOWQjOmihOeul+WPiuWPr+aOiOadg+eahOW3peWFt+OAggoKfCDnirbmgIHlj5jljJYgfCDlt7LphY3nva7nmoQgQ29kaW5nIEhhcm5lc3MgfCDlsJrmnKrphY3nva7lt6XnqIvpgILphY3nmoTpgJrnlKggQWdlbnQgfAp8LS0tfC0tLXwtLS18Cnwg5pS25Yiw6ZyA5rGCIHwgSXNzdWUg57uR5a6a5rqQ56CB5Z+657q/44CB6aG555uu6K+05piO5LiO5bel5L2c55uu5b2VIHwg5YWI56Gu6K6k6aG555uu44CB54mI5pys44CB5Luj56CB5L2N572u5ZKM5YWB6K6455qE5L+u5pS56IyD5Zu0IHwKfCDlu7rnq4vnjq/looMgfCDlnKjmjIflrprlt6Xlhbfpk77kuK3lronoo4Xkvp3otZblubbot5Hln7rnur8gfCDmib7ov5DooYzmlrnlvI/kuI7kvp3otZbvvJvljZXlh63plJnor6/miKrlm77kuI3og73noa7lrprnjq/looPmmK/lkKbmraPnoa4gfAp8IOe8qeWwj+mXrumimCB8IOaKiuW1jOWll+S4jumdnuW1jOWll+e7k+aenOWvueeFp++8jOWumuS9jee7hOWQiOefqemYtemAu+i+kSB8IOS5n+iDveWBmuWIsO+8jOS9huW/hemhu+S4u+WKqOaehOW7uuWQjOS4gOWll+WPr+aJp+ihjOWkjeeOsCB8Cnwg5L+u5pS55ZCO5qOA5p+lIHwg5paw5aKe5Zue5b2S5rWL6K+V77yM5qOA5p+l5Y+X5b2x5ZON55qE57uE5ZCI5oOF5Ya177yM6LeR55u45YWz5rWL6K+VIHwg6Iul5YGc5Zyo4oCc6Kej6YeK5ZCI55CG44CB5paH5Lu25bey5pS54oCd77yM5LuN5pyq6L+b5YWl5Y+v6aqM6K+B55qE5Lqk5LuY54q25oCBIHwKfCDkuqTku5ggfCDluKbln7rnur/jgIFkaWZm44CB5rWL6K+V6K+B5o2u55qE5YCZ6YCJ5Y+Y5pu077yM6L+b5YWl5a6h5p+l5LiOIENJIHwg6KaB6L6+5Yiw5ZCM562J5Lqk5LuY5qCH5YeG77yM5b+F6aG76KGl6b2Q54mI5pys44CB6K+B5o2u5LiO5a6h5p+l5o6l5Y+jIHwKCioq5beu5byC5LiN5pivIENvZGluZyBBZ2VudCDpnaLlr7nmm7TlsI/nmoTkuJbnlYzvvIzogIzmmK8gSGFybmVzcyDpooTlhYjlm7rlrprkuobmm7TlpJrlnZDmoIfjgIIqKuWPr+aKiuacieaViOW3peS9nOeKtuaAgeWGmeaIkO+8mgoKYFMgPSDmupDnoIHlv6vnhacgw5cg5L6d6LWW5LiO5bel5YW36ZO+IMOXIOmqjOivgeadoeS7tiDDlyDlpJbpg6jns7vnu5/nirbmgIEgw5cg5o6I5p2D6IyD5Zu0YAoK6YCa55SoIEFnZW50IOiLpeWPqueci+WIsOKAnOS4gOS4quS7o+eggeaWh+S7tuKAne+8jOi/meS6m+WdkOagh+Wkp+Wkmuacquefpe+8m0NvZGluZyBIYXJuZXNzIOiuqeWug+S7rOWPr+Wvu+WdgOOAgeWPr+mHjeW7uuOAgeWPr+avlOi+g+OAgumAmueUqCBBZ2VudCDkuIDml6bliqDovb3nm7jlkIzlt6XnqIvpgILphY3vvIznirbmgIHnqbrpl7TlsLHkvJrmlLbmlZvigJTigJTov5nmlK/mjIHln7rnoYDorr7mlr3lpI3nlKjvvIzljbTmsqHmnInor4HmmI7lt6XnqIvpgILphY3lj6/ku6XnnIHljrvjgIIKCui/meS4quahiOS+i+eahOmqjOaUtuadoeS7tuebuOWvueaYjuehru+8jOiAjOS4lOS4jemcgOimgemDqOe9suOAguiLpeS7u+WKoeaNouaIkOKAnOS/ruWkjee6v+S4iue7k+i0puWBtuWPkemHjeWkjeaJo+asvuKAne+8jOWQjOS4gOS4qiByZXBvIOi/nOi/nOS4jeWkn++8mui/mOmcgOimgeaUr+S7mOW5guetiee6puadn+OAgeaVsOaNruW6k+eKtuaAgeOAgeecn+WuniB0cmFjZeOAgeeBsOW6puWPkeW4g+S4jui1hOmHkeihpeWBv+OAgioq5LiT5Lia5oCn6ZqP552A57O757uf6LSj5Lu75aKe5Yqg77yM6ICM6Z2e6ZqP552A5Luj56CB6KGM5pWw5aKe5Yqg44CCKioKCiMjIOi9r+S7tueUn+S6p+mTvu+8muS6uueahOW3peS9nOWQkeWTqumHjOenu+WKqAoKYOmcgOaxguS4jue6puadnyDihpIg57O757uf5a6a5L2NIOKGkiDliIbop6PkuI7orqHliJIg4oaSIOmalOemu+WunueOsCDih4Qg5rWL6K+V5LiO5L+u5aSNIOKGkiDlj5jmm7TlrqHmn6Ug4oaSIOWQiOW5tuS4jiBDSSDihpIg54Gw5bqm6YOo572yIOKGkiDop4Llr5/kuI7mgaLlpI0g4oa6YAoK6ZO+5p2h6YeM5pyJ5LiJ56eN6Zet546v77yM5LiN6IO955So5LiA5Liq4oCc6Ieq5Yqo5a6M5oiQ4oCd6KaG55uW77yaCgp8IOmXreeOryB8IEFnZW50IOWwhuaJv+aLheS7gOS5iCB8IOS6uuaIlue7hOe7h+etlueVpeS7jeimgeWumuS5ieS7gOS5iCB8CnwtLS18LS0tfC0tLXwKfCDlrp7njrDpl63njq8gfCDmn6Xmib7jgIHkv67mlLnjgIHnvJbor5HjgIHmtYvor5XjgIHkv67lpI3vvJvlpITnkIblpKflpJrmlbDmnLrmorDmraXpqqQgfCDpnIDopoHmu6HotrPnmoTooYzkuLrkuI7kuI3lj6/noLTlnY/nmoTnuqbmnZ8gfAp8IOmbhuaIkOmXreeOryB8IOWIhuino+S+nei1luOAgeWuieaOkumhuuW6j+OAgeWkhOeQhiByZXZpZXfjgIFDSSDkuI7lubbooYzlhrLnqoEgfCDns7vnu5/ovrnnlYzjgIHot6jlm6LpmJ/lj5boiI3jgIHlj5jmm7TlvZLlsZ4gfAp8IOeUn+S6p+mXreeOryB8IOeUn+aIkOWPkeW4g+iuoeWIkuOAgeeBsOW6puinguWvn+OAgeW9kuWboOOAgeaaguWBnOOAgeWbnumAgOaIluihpeWBvyB8IOmjjumZqemineW6puOAgemDqOe9suadg+mZkOOAgeS4jeWPr+mAhuWKqOS9nOS4jui0o+S7u+S6uiB8CgoqKkFnZW50IOS8mui0n+i0o+aVtOadoemTvueahOe8luaOkuS4juWkp+mDqOWIhuaJp+ihjO+8m+iOt+W+l+WFqOmTvui3r+iDveWKm++8jOS4jeetieS6juiOt+W+l+aXoOadoeS7tuWFqOmTvui3r+aOiOadg+OAgioq5LiA5Liq57O757uf5Y+v6L+e57ut5o6o6L+b5Lu75Yqh77yM5ZCM5pe25Zyo6aOO6Zmp6L6555WM562J5b6F5om55YeG5oiW5oyJ6aKE5YWI5om55YeG55qE562W55Wl5omn6KGM44CC5a6h5om55LiN5b+F5Y+R55Sf5Zyo5q+P5qyh5bel5YW36LCD55So44CCCgrnnJ/mraPnmoTplb/mnJ/ku7vliqHkuI3kvJrlp4vnu4jljaDnlKjkuIDkuKrlpKfogYrlpKnnqpflj6PjgILlroPpnIDopoHlj6/mjIHkuYXljJbnmoTku7vliqHlm77jgIHnjq/looPkuI7or4Hmja7vvIznrYnlvoUgQ0kg5oiWIHJldmlldyDml7bph4rmlL7orqHnrpfvvIzooqvkuovku7bllKTphpLlkI7nu6fnu63jgIJBbnRocm9waWMg55qE6ZW/5Lu75Yqh5a6e6aqM6YeH55So6L+b5bqm5paH5Lu244CB5Yqf6IO95riF5Y2V5LiOIEdpdCDnirbmgIHmoaXmjqXkvJror53vvJtDdXJzb3IgUHJvamVjdHMg5bey5oqK5YWx5Lqr5LiK5LiL5paH5ZKM5LqL5Lu26K6i6ZiF5L2c5Li65bel5L2c5py65Yi244CCW1M1XVtTNl0KCioq5Lq65LiN5YaN6ZyA6KaB5omL5Yqo5ouG5q+P5LiA5LiqIENvZGluZyBUYXNr77yM5L2G5LuN6ZyA6KaB5YiG6Kej6LSj5Lu744CCKipBZ2VudCDog73mi4bigJzmlLnlk6rlh6DkuKrmlofku7bigJ3vvIzkuZ/kvJrotormnaXotorog73mi4bigJzmgI7moLfov4Hnp7sgMzAwIOS4quacjeWKoeKAne+8m+Wug+aXoOazleS7juepuueZveS4reW+l+efpeWFrOWPuOaEv+aEj+eJuueJsuWkmuWwkeWFvOWuueaAp+OAgeaUtuWFpeaIlue7tOaKpOaIkOacrOOAguS6uue7meebruagh+OAgee6puadn+OAgemihOeul+S4jumqjOaUtu+8m0FnZW50IOe7meWHuuW5tuS4jeaWremHjeWGmeaJp+ihjOiuoeWIkuOAggoK5YiG5pSv6IO96ZqU56a75paH5Lu25YaZ5YWl77yM5LiN6IO96ZqU56a75YWx5Lqr5pWw5o2u5LiO6Leo5pyN5Yqh6KGM5Li644CC5bm26KGMIEFnZW50IOWinuWkmuS8muaKiuWOi+WKm+aOqOWQkembhuaIkOS4jumqjOivgeOAguiuqeWQjOS4gOS4qiBBZ2VudCDnvJblhpnlrp7njrDjgIHoh6rnlLHkv67mlLnpqozmlLbmtYvor5XjgIHlho3lrqPluIPpgJrov4fvvIzkvJrlvaLmiJDoh6ror4Hlvqrnjq/vvJvni6znq4vpqozor4HpnIDopoHlpJbpg6jop4TmoLzjgIHlj5fkv53miqTnmoTliKTmja7kuI7nnJ/lrp7ov5DooYzor4Hmja7vvIzlpJrlvIDkuIDkuKrlrqHmn6UgQWdlbnQg5bm25LiN6Ieq5Yqo5raI6Zmk55u45YWz6ZSZ6K+v44CCCgrnlJ/kuqflkJ7lkJDph4/nmoTnuqbmnZ/lj6/nm7Top4LlhpnkuLrvvJoKCmDlj6/pnaDkuqTku5jpgJ/luqYg4omkIOeUn+aIkOOAgemqjOivgeOAgembhuaIkOOAgeWPkeW4g+Wbm+eOr+iKguS4reacgOaFoueahOS4gOeOr2AKCuaJgOS7peW6lOavlOi+g+KAnOavj+S4quiiq+aOpeWPl+S4lOWcqOe6v+S4iuaIkOeri+eahOWPmOabtOaAu+aIkOacrOKAne+8jOWFtuS4reWMheaLrOaooeWei+OAgeeOr+Wig+OAgeS6uuexu+WuoeafpeOAgei/lOW3peWSjOaVhemanOaNn+WkseOAglBSIOaVsOOAgXRva2VuIOaVsOOAgeaXoOS6uui/kOihjOaXtumVv+mDveS4jeiDveWNleeLrOS7o+ihqOS6p+iDveOAgk1FVFIg55qEIDIwMjUg5bm05bCP5qC35pys6ZqP5py65a6e6aqM5Y+R546w77yM54af5oKJ6Ieq5bex5LuT5bqT55qE5byA5Y+R6ICF5L2/55So5b2T5pe255qE5bel5YW35Y+N6ICM5pu05oWi77yb6L+Z5Y+q6IO96K+B5piO6ZyA6KaB5rWL5oC75oiQ5pys77yM5LiN6IO955u05o6l5aSW5o6o5Li6IDIwMjYg5bm0IEFnZW50IOeahOaViOeOh+e7k+iuuuOAgltTMjJdCgojIyDmr4/lrrblhazlj7jnnJ/mraPmirzms6jku4DkuYgKCuS7peS4i+KAnOS4i+azqOKAneaYr+WvueWFrOW8gOS6p+WTgeS4juezu+e7n+mAieaLqeeahOWIhuaekO+8jOS4jeaYr+WFrOWPuOWGhemDqOi3r+e6v+WbvuOAguS6i+WunueUqOS6juWIpOaWrei1hOa6kOaKleWQke+8jOS4jemHh+eUqOWOguWVhuiHquaKpeeahOaViOeOh+WAjeaVsOS9nOS4uuaoquWQkeaOkuWQjeOAggoKfCDlhazlj7ggLyDot6/nur8gfCDlj6/moLjpqoznmoTpgInmi6kgfCDlrp7pmYXkuIvms6jkuI7miJDnq4vmnaHku7YgfAp8LS0tfC0tLXwtLS18CnwgT3BlbkFJIC8gQ29kZXggfCDlvZPliY0gQ29kZXgg6L+e5o6lIENoYXRHUFTjgIFDTEnjgIHnvJbovpHlmajkuI7kupHnjq/looPvvIzljIXlkKsgUFIgcmV2aWV3IOWSjOaPkuS7tu+8m+WQjOaXtue7j+iQpSBDaGF0R1BUIFdvcmvjgIJbUzFdW1MyXSB8ICoq5qih5Z6L5LiO6YCa55So5bel5L2c5YWl5Y+j6IO95om/5o6l6L2v5Lu255Sf5Lqn44CCKirnlKggQ29kaW5nIOiOt+W+l+mrmOWvhuW6puaJp+ihjOWPjemmiO+8jOWGjeaJqeWxleWIsOi3qOW3peWFt+W3peS9nOOAguimgeaIkOeri++8jOS7u+WKoeS4iuS4i+aWh+OAgeadg+mZkOWSjOaJp+ihjOeKtuaAgeW/hemhu+i3qOWFpeWPo+W7tue7re+8jOmAmueUqOW5s+WPsOi/mOmcgOS/neaMgeW3peeoi+a3seW6puOAgiB8CnwgQW50aHJvcGljIC8gQ2xhdWRlIENvZGUgfCBDb2RlIFNESyDlt7Lmm7TlkI0gQWdlbnQgU0RL77yM5piO56Gu5pSv5oyB56CU56m244CB6LSi5Yqh44CB5Liq5Lq65Yqp55CG77ybMjAyNi0wOSDlrqPluIMgQ293b3JrIOS4jiBDaGF0IOiejeWQiOOAgltTM11bUzRdIHwgKirnu5nlvLrmqKHlnovkuIDlj7Dlj6/mk43kvZznmoTorqHnrpfmnLrkuI7lpb3nmoTmiafooYzlvqrnjq/vvIzlsLHog73mianlsZXliLDlpKflpJrmlbDmlbDlrZflt6XkvZzjgIIqKuaKgOacr+agiOWPr+mAmueUqO+8jENsYXVkZSBDb2RlIOS7jeaJv+aLheW8gOWPkeiAheeahOmrmOW4puWuveaOpeWPo+OAguiDnOi0n+WPluWGs+S6jumVv+S7u+WKoeeKtuaAgeS4jumqjOivge+8jOS4jeaYr+KAnOe7iOerr+WkqeeEtuWPqumAguWQiOeoi+W6j+WRmOKAneOAgiB8CnwgQ3Vyc29yIHwgMjAyNi0wOSBQcm9qZWN0cyDopobnm5bot6jmnIjlt6XkvZzjgIHoh6rliqjliIbop6PkuI7kuovku7borqLpmIXvvJtSb2xsb3V0cyDlu7bkvLjliLAgUFIg5ZCO55qE5LiK57q/6KeC5a+f77yb5omn6KGM5Y+v5L2N5LqO5a6i5oi3566h55CG55qE5py65Zmo44CCW1M2XVtTN11bUzhdIHwgKirkuJPkuJrova/ku7bnlJ/kuqfnmoTmt7HluqbotrPku6XmlK/mkpHni6znq4vlt6XkvZzlj7DjgIIqKklERSDnmoTku7flgLzovazlkJHns7vnu5/kuIrkuIvmlofjgIHlubbooYzlj5jmm7TnrqHnkIbkuI7nlJ/kuqfpl63njq/jgILlv4XpobvlnKjmqKHlnovotovlkIzlkI7vvIzku43mmL7okZfpmY3kvY7pqozor4HjgIHpm4bmiJDlkozkuIrnur/miJDmnKzjgIIgfAp8IEdpdEh1YiBDb3BpbG90IHwgQWdlbnQgSFEg5oqK5aSa5a62IEFnZW50IOe6s+WFpSBHaXRIdWIg5rK755CG77yb5b2T5YmNIENvcGlsb3QgQXBwIOaKiiBJc3N1ZeOAgemalOemuyB3b3Jrc3BhY2XjgIFyZXZpZXcg5LiOIG1lcmdlIOi/nuaOpei1t+adpeOAgltTOV1bUzEwXSB8ICoq5qih5Z6L5Y+v5Lul5pu05o2i77yM5LyB5Lia5Luj56CB55qE6K6w5b2V5LiO5YeG5YWl5bmz5Y+w5pu06Zq+5pu05o2i44CCKipHaXRIdWIg5oq85rOo5omA5pyJIEFnZW50IOacgOe7iOmDveimgee7j+i/h+S7o+eggeOAgeadg+mZkOOAgeajgOafpeS4juWQiOW5tueahOWFs+WPo++8jOWIhuWPkeWSjOayu+eQhuWPr+avlOWGmeS7o+eggeacrOi6q+abtOaMgeS5heOAgiB8CnwgVFJBRSB8IOWumOe9keW5tuWIlyBUcmFlQ29kZSDkuI4gVHJhZVdvcmvvvJtXb3JrIOaWh+aho+WMheWQqyBXb3Jr44CBQ29kZeOAgURlc2lnbiDmqKHlvI/lkozmnKzlnLAv5LqR5Lu75Yqh44CCW1MxMV0gfCAqKkNvZGluZyDpqozor4Hov4fnmoTmiafooYzog73lipvlj6/miJDkuLrpgJrnlKjlt6XkvZznmoTlupXluqfvvIzlubbkv53nlZnkuJPkuJrlvIDlj5HlhaXlj6PjgIIqKuiLpeaZrumAmueUqOaIt+WPquWGmeS4tOaXtuiEmuacrO+8jOmAmueUqOWFpeWPo+i2s+Wkn++8m+aMgee7ree7tOaKpOeOsOaciei9r+S7tuWImeS7jemcgOW3peeoi+S4iuS4i+aWh+OAguimgeeci+i/meS6m+aooeW8j+iDveWQpuWFseS6q+eKtuaAgeS4juWPr+mdoOaAp++8jOiAjOmdnueci+aooeW8j+aVsOmHj+OAgiB8CnwgR29vZ2xlIC8gR2VtaW5pIENMSeOAgUFudGlncmF2aXR544CBSnVsZXMgfCBDTEkg5LuO5Y+R5biD5pe25bCx6KaG55uWIENvZGluZ+OAgeeglOeptuS4juS7u+WKoe+8m0FudGlncmF2aXR5IOmHh+eUqOe8lui+keWZqOS4jiBBZ2VudCDnrqHnkIbnlYzpnaLvvJtKdWxlcyDmj5DkvpvlvILmraXkupHmiafooYzjgIJbUzEyXVtTMTNdW1MxNF0gfCAqKuW8gOaUvuaJp+ihjOaOpeWPo+OAgeS7u+WKoeW3peS9nOWPsOOAgeS6keeOr+Wig+WPr+WFseWQjOaJqeWkp+aooeWei+WIhuWPkeOAgioqQ0xJIOaYr+WPr+W1jOWFpeeahOaJp+ihjOWFpeWPo++8jOeuoeeQhueVjOmdouaJv+aOpeS6uuexu+ebkeedo+OAgkdvb2dsZSDnmoTlpJrlhaXlj6PmmK/lpJrmnaHkuIvms6jvvJvlhazlvIDkuovlrp7kuI3otrPku6Xmlq3oqIDlroPku6zlt7Lnu5/kuIDmiJDkuIDkuKrns7vnu5/jgIIgfAp8IENvZ25pdGlvbiAvIERldmlu44CBV2luZHN1cmYgfCBEZXZpbiBEZXNrdG9wIOaKiiBXaW5kc3VyZiDnmoQgSURFIOWfuuehgOaUuemAoOaIkCBBZ2VudCDnrqHnkIbkuK3lv4PvvJvkupHns7vnu5/nnYDph43nirbmgIHmgaLlpI3jgIHkvIHkuJrmjqXlhaXkuI7msrvnkIbjgIJbUzE1XVtTMTZdIHwgKirkvIHkuJrotK3kubDnmoTmmK/og73mjIHnu63mjqXmtLvnmoTova/ku7blt6XnqIvkuqfog73jgIIqKua3seW6pumAgumFjemBl+eVmeezu+e7n+S4jua1geeoi++8jOavlOaLpeacieiBiuWkqea1gemHj+abtOmHjeimgeOAguimgeaIkOeri++8jOS6pOS7mOaUtuebiumhu+imhueblueOr+Wig+W7uuiuvuOAgXJldmlldyDlkoznu4Tnu4fmlLnpgKDmiJDmnKzjgIIgfAp8IFJlcGxpdCB8IDIwMjYtMDgg5bey5oqK5pel5bi46IGK5aSp44CB5YiG5p6Q44CB6K6+6K6h5LiO5aSN5p2C5p6E5bu657qz5YWl5ZCM5LiA5L2T6aqM77yb5L6d54S26L+e5o6l5bqU55So5Yib5bu65LiO5Y+R5biD44CCW1MxN10gfCAqKuaOp+WItuWIm+W7uuWIsOi/kOihjOeahOeOr+Wig++8jOWPr+S7peaKiui9r+S7tuWItuS9nOWNlue7meabtOW5v+eahOS6uue+pO+8jOWGjeaJqeWxleS4uuW3peS9nOWFpeWPo+OAgioq546v5aKD6LaK5Y+v5o6n77yM5YWo6ZO+6Ieq5Yqo5YyW6LaK5a655piT77yb6L+B5YWl5Lu75oSP6YGX55WZ5LyB5Lia57O757uf5pe277yM6L+Z5Liq5LyY5Yq/5Lya5YeP5byx44CCIHwKfCBPcGVuSGFuZHMgLyBDbGluZSDnrYnlvIDmlL7ot6/nur8gfCBPcGVuSGFuZHMg5Y+v5om/5o6l5LiN5ZCMIEFnZW50IOS4juacrOWcsC/ov5znqIvlkI7nq6/vvJtDbGluZSDlkIzml7bmj5DkvpsgU0RL44CBSURFIOaJqeWxleS4jiBDTEnjgIJbUzE4XSB8ICoq5omn6KGM57O757uf5LiO55WM6Z2i5Y+v5ouG5Y2444CB5Y+v6Ieq5bu677yM5qih5Z6L5L6b5bqU5ZWG5peg5rOV54us5Y2g5YWo6YOoIEhhcm5lc3PjgIIqKuS8muWOi+S9juWfuuehgOaJp+ihjOWxgua6ouS7t++8jOS5n+e7meS4k+S4muW3peeoi+WxguS/neeVmeWkmuS+m+W6lOWVhuepuumXtOOAgiB8Cnwg6YCa55SoIFdvcmsgLyBDb21wdXRlciBBZ2VudCB8IENoYXRHUFQgV29ya+OAgUNsYXVkZeOAgU1hbnVzIOmDveaKiui3qOW3peWFt+S4iuS4i+aWh+OAgeaWh+S7tuS4jumVv+acn+aJp+ihjOeUqOS6juWkmuexu+S7u+WKoe+8m09TV29ybGQg5L2/55So5omn6KGM57uT5p6c6K+E5rWL6K6h566X5py65Lu75Yqh44CCW1MyXVtTNF1bUzIwXVtTMjNdIHwgKirmjozmj6HnlKjmiLfnm67moIfjgIHkuJrliqHkuIrkuIvmlofkuI7mjojmnYPvvIzkvr/lj6/ot6/nlLHlkITnp43kuJPkuJrog73lipvjgIIqKkNvbXB1dGVyIFVzZSDop6PlhrPlj6/ovr7mgKfvvIxBUEkvQ0xJIOino+WGs+mrmOaViOeos+WumuaJp+ihjO+8m+S8mueCueWHu+S4jeetieS6jueQhuino+ezu+e7n++8jOabtOS4jeetieS6jumqjOivgeS6pOS7mOOAgiB8Cgrov5nkupvkuIvms6jmnInlhbHlkIzmlrnlkJHvvJoqKkNvZGluZyDlhazlj7jmraPlnKjlkJHpgJrnlKjlt6XkvZzmianlsZXvvIzpgJrnlKjlhazlj7jmraPlnKjooaXpvZDlt6XnqIvpl63njq/jgIIqKuernuS6ieWPkeeUn+WcqOiwgeaOjOaPoeS7u+WKoeS4iuS4i+aWh+OAgeaJp+ihjOeKtuaAgeWSjOe7k+aenOmqjOivge+8jOiAjOmdnuiwgeabtOWDjyBJREXjgIIKCuS8geS4muS7jeaEv+aEj+i0reS5sOS4k+S4muWxgueahOW6leWxguWOn+WboOaYr++8mua6kOeggeS4jui/kOihjOeOr+Wig+mrmOW6puiApuWQiO+8jOWPkeW4g+adg+mZkOWSjOi0o+S7u+W/hemhu+aYjuehru+8jOWOhuWPsuWPmOabtOOAgeeUn+S6p+WPjemmiOS4jue7hOe7h+e6puadn+mcgOimgemVv+acn+enr+e0r+OAgumAmueUqOW5s+WPsOiDveaJv+i9vei/meS6m+iDveWKm++8jOS9huaJv+i9veW5tuS4jeS8muiHquWKqOS6p+eUn+Wug+S7rOOAggoKIyMg5Y2B5Liq6Zeu6aKY77yM5piO56Gu5L2c562UCgp8IOmXrumimCB8IOS4u+WIpOaWrSB8IOWGs+Wumue7k+aenOeahOacuuWItiB8CnwtLS18LS0tfC0tLXwKfCBJREUg5Lya6YCA5Yiw5ZCO5Y+w5ZCX77yfIHwgKirkvJrjgIIqKuS7jum7mOiupOeUn+S6p+WFpeWPo+mAgOS4uuajgOafpeOAgeiwg+ivleS4jueyvue7huW5sumihOW3peWFt+OAgiB8IOS6uuS7jumAkOihjOaTjeS9nOi9rOWQkeebkeedo+WkmumhueS7u+WKoe+8m+WkjeadguiviuaWreS7jemcgOimgeepuumXtOWMluOAgee7k+aehOWMlueahOS4k+S4mueVjOmdouOAgiB8CnwgQ0xJIOS4uuS7gOS5iOmHjeaWsOmHjeimge+8nyB8ICoq5a6D5Lya5oiQ5Li6IEFnZW50IOeahOmAmueUqOaJp+ihjOaOpeWPo+S5i+S4gOOAgioqIHwg5ZG95Luk5Y+v57uE5ZCI44CB5Y+v6ISa5pys5YyW44CB5Y+v6L+c56iL6L+Q6KGM77yM5bm25o+Q5L6b6YCA5Ye656CB5LiO5paH5pys5Y+N6aaI77yb546w5pyJ5bel5YW36ZO+5peg6ZyA6YCQ5Liq6YeN5YGaIEdVSSDpm4bmiJDjgIJDTEkg5rWB6KGM5LiN562J5LqO5Lq66KaB6YeN5paw6IOM5ZG95Luk77yM57uT5p6E5YyWIEFQSSDmnInml7bmm7Tlj6/pnaDjgIIgfAp8IENoYXQg5Lya5oiQ5Li65Li75YWl5Y+j5ZCX77yfIHwgKirkvJrmiJDkuLrkurrnsbvlj5HotbfkuI7nuqDlgY/nmoTkuLvlhaXlj6PvvJvkuI3kvJrni6zoh6rmib/ovb3lhajpg6jnlJ/kuqfjgIIqKiB8IOebruagh+mAguWQiOivreiogOihqOi+vu+8jOeKtuaAgeWSjOivgeaNrumAguWQiOS7u+WKoeadv+OAgWRpZmbjgIHpooTop4jkuI7mjIfmoIfvvJvlpKfph4/lkI7lj7Dku7vliqHov5jkvJrnlLHkuovku7bop6blj5HjgIIgfAp8IENsb3VkIEFnZW50IOS8muaIkOS4uum7mOiupCBydW50aW1lIOWQl++8nyB8ICoq5Lya77yM6Z2i5ZCR5Y+v5qCH5YeG5YyW55qE6L2v5Lu25Lu75Yqh77yM5byC5q2l6ZqU56a7546v5aKD5Lya5oiQ5Li66buY6K6k44CCKiogfCDlubbooYzjgIHnu63ot5HjgIHotYTmupDosIPluqbkuI7njq/looPlpI3nlKjkvJjkuo7nu5HlrprkuKrkurrnlLXohJHvvJvnp4HnvZHjgIHnoazku7bjgIHnp7vliqjorr7lpIfkv53nlZnmnKzlnLDmiJblrqLmiLfoh6rnrqHmiafooYzjgILov5nph4znmoTkupHpu5jorqTkuI3nrYnkuo7kvpvlupTllYblhazmnInkupHlnoTmlq3jgIIgfAp8IHJlcG8g6L+Y5piv5qC45b+D5bel5L2c5Y2V5YWD5ZCX77yfIHwgKirkuI3lho3mmK/pobblsYLlt6XkvZzljZXlhYPvvJvku43mmK/lhbPplK7lt6XnqIvmnZDmlpnkuI7msrvnkIbovrnnlYzjgIIqKiB8IOmhtuWxguWPmOaIkOacieebruagh+OAgeS7u+WKoeWbvuOAgeivgeaNruOAgeadg+mZkOS4jueOr+Wig+eahCBQcm9qZWN0L0NoYW5nZe+8m+S4gOS7tuS6i+WPr+i3qOWkmuS4qiByZXBv77yM5Lmf5Y+v5Y+q5pS56YWN572u5oiW5pWw5o2u44CCIHwKfCDkurrov5jopoHmiYvliqjmi4YgQ29kaW5nIFRhc2sg5ZCX77yfIHwgKirlpKflpJrmlbDluLjop4Tku7vliqHkuI3pnIDopoHvvJvnu4Tnu4fkuI7kuqflk4HotKPku7vku43pnIDkurrlrprnlYzjgIIqKiB8IOaKgOacr+WIhuino+WPr+WKqOaAgeeUn+aIkO+8m+ebuOS6kuefm+ebvueahOebruagh+OAgei3qOWboumYn+aJv+ivuuS4jumqjOaUtuagh+WHhuS4jeiDvemdoOacuuaisOaLhuWIhuino+WGs+OAgiB8CnwgQWdlbnQg5Lya6LSf6LSj6ZyA5rGC5Yiw6YOo572y5pW05p2h6ZO+5ZCX77yfIHwgKirkvJrjgIIqKuaVtOmTvue8luaOkuS4juaJp+ihjOaIkOS4uuagh+WHhuiDveWKm+OAgiB8IOmjjumZqeWIhue6p+aOiOadg+S4juWklumDqOmqjOivgeWGs+WumuWTquS6m+atpemqpOiHquWKqOeUn+aViO+8m+KAnOi0n+i0o+aJp+ihjOKAneS4jeetieS6juaJv+aLheazleW+i+aIlue7hOe7h+i0o+S7u+OAgiB8CnwgQ29kaW5nLXNwZWNpZmljIEhhcm5lc3Mg6L+Y5Ymp5LuA5LmI77yfIHwgKirnqIvluo/or63kuYnjgIHlj6/ph43lu7rnjq/looPjgIHlj5jmm7Tpm4bmiJDjgIHni6znq4vpqozor4HjgIHlj5HluIPkuI7ov5DooYzlj43ppojjgIIqKiB8IOmAmueUqOW+queOr+WPr+S7peWkjeeUqO+8m+espuWPty/nsbvlnosv5o6l5Y+j44CB5L6d6LWW5LiO5p6E5bu644CB5Y+X5b2x5ZON5rWL6K+V44CB6L+B56e75YW85a6544CB57q/5LiK5b2S5Zug6ZyA6KaB5LiT5Lia5py65Yi244CC5a6D5Lus5Y+v5L2c5Li65o+S5Lu244CB5pyN5Yqh5oiW54us56uL5bmz5Y+w5a2Y5Zyo44CCIHwKfCDmnIDnu4jovrnnlYzlnKjlk6rph4zvvJ8gfCAqKldvcmsg5bGC566h55CG55uu5qCH5ZKM6Leo5Lia5Yqh5rWB56iL77ybQ29kaW5nIOWxgueuoeeQhui9r+S7tuWPmOabtOeahOato+ehruaAp+S4jueUn+aViOadoeS7tuOAgioqIHwg6L6555WM5piv5Y+v5Lqk5LuY55qE54q25oCB5Y+Y5pu05aWR57qm77yM5LiN5piv5piv5ZCm55Sf5oiQ5LqG5Luj56CB44CC5ZCM5LiA5Liq6L+b56iL5oiW5Lqn5ZOB5Y+v5Lul5YyF5ZCr5Lik5bGC44CCIHwKfCAyMDI3IC8gMjAyOCAvIDIwMzAg5pyA5Y+v6IO955qE5b2i5oCB77yfIHwgKioyMDI3IOWkmuWFpeWPo+S7u+WKoeWPsO+8mzIwMjgg6YCa55So5YWl5Y+j6LCD5bqm5LiT5Lia6L+Q6KGM546v5aKD77ybMjAzMCDpgJrnlKjlt6XkvZznqbrpl7QgKyDova/ku7bnlJ/kuqfkuJPkuJrlubPlj7DjgIIqKiB8IOe7n+S4gOebruagh+WFpeWPo+mZjeS9juWIh+aNouaIkOacrO+8m+i9r+S7tuWPmOabtOeahOmqjOivgeOAgeayu+eQhuOAgee7tOaKpOS/neeVmeS4k+S4mue7j+a1juaAp+OAgiB8Cgrov5nph4zmnIDlgLzlvpfkv53nlZnnmoQgSGFybmVzcyDmmK/kuIDku70qKuWPmOabtOWlkee6pioq77ya6L6T5YWl5YyF5ZCr5Z+657q/44CB55uu5qCH44CB6ZmQ5Yi244CB6aKE566X44CB5p2D6ZmQ77yb6L6T5Ye65YyF5ZCr5Y+Y5pu044CB5Y+v5aSN546w6aqM6K+B44CB5bey55+l6aOO6Zmp44CB5LiK57q/5LiO5oGi5aSN5p2h5Lu244CC6YCa55SoIEFnZW50IOS4jeW/heeQhuino+avj+S4quW3peeoi+e7huiKgu+8jOW/hemhu+iDveivt+axguOAgeajgOafpeW5tuaMgee7rei/vei4qui/meS7veWlkee6puOAggoKIyMgMjAyNiDihpIgMjAzMO+8mui/geenu+eahOaYr+iDveWKm++8jOeVmeS4i+eahOaYr+e6puadnwoKfCDml7bpl7QgfCDpgJrnlKjlt6XkvZzkuqflk4EgfCDkuJPkuJogQ29kaW5nIOS6p+WTgSB8IOS6uuexu+S4u+imgeWBmuS7gOS5iCB8CnwtLS18LS0tfC0tLXwtLS18CnwgMjAyNu+8jOW3suinguWvnyB8IOaWh+S7tuOAgei/nuaOpeWZqOOAgeiuoeeul+acuuaTjeS9nOS4jumVv+acn+S7u+WKoeW8gOWni+axh+WQiCB8IOW3suS7juihpeWFqOi1sOWQkeS6keaJp+ihjOOAgVByb2plY3TjgIFyZXZpZXcg5ZKM5Y+R5biD6KeC5a+fIHwg5o+Q55uu5qCH44CB6KGl5LiK5LiL5paH44CB5Y+N5aSN57qg5YGP44CB5qOA5p+l6K+B5o2uIHwKfCAyMDI377yM6aKE5rWLIHwg5LiA5Liq5Lya6K+d5Y+v5ZCv5Yqo5paH5qGj44CB5YiG5p6Q44CB6L2v5Lu25Lu75Yqh77yM5bim5oyB57ut5Lu75Yqh5YiX6KGoIHwgSURF44CBQ0xJ44CBQ2hhdOOAgeS6keS7u+WKoeWFseS6q+i2iuadpei2iuWkmuS8muivneS4jueKtuaAgSB8IOWumuS5iemqjOaUtuadoeS7tu+8jOWuoeafpemrmOmjjumZqeWPmOabtOS4juWksei0peS7u+WKoSB8CnwgMjAyOO+8jOmihOa1iyB8IFByb2plY3Qg5oiQ5Li655uu5qCH5LiO5LiK5LiL5paH5a655Zmo77yM5oyJ5Lu75Yqh5oyC6L295LiT5Lia5omn6KGM6IO95YqbIHwg5LqRL+engeaciei/kOihjOeOr+Wig+OAgea1i+ivleS4juWuoeafpeacjeWKoeOAgeWPkeW4g+aOp+WItuaIkOS4uuS4u+imgeS7mOi0ueiDveWKmyB8IOeuoeeQhui3qOezu+e7n+ebruagh+OAgeadg+mZkOOAgemihOeul+WSjOS+i+WkliB8CnwgMjAzMO+8jOmihOa1iyB8IOeUqOaIt+mAmuW4uOihqOi+vuebruagh++8jOS4jeWFiOmAieaLqSBBZ2VudCDnsbvliKsgfCDni6znq4vova/ku7bnlJ/kuqflubPlj7Dnu6fnu63lrZjlnKjvvIzkuZ/ltYzlhaXpgJrnlKjlhaXlj6PvvJtJREUg5L2c5Li65qOA5p+l5LiO6LCD6K+V6KeG5Zu+5oyJ6ZyA5Ye6546wIHwg5a6a5LmJ57O757uf6L6555WM44CB6LSo6YeP5qCH5YeG44CB6aOO6Zmp6aKd5bqm5LiO6LSj5Lu7IHwKCuS8muWQkemAmueUqOWxgui/geenu++8muinhOWIkuOAgeajgOe0ouOAgeaWh+S7tuaTjeS9nOOAgeiuoeeul+acuuaTjeS9nOOAgeiusOW/huOAgeiwg+W6puOAgeaymeeuseOAgeWHreaNruS7o+eQhuOAgeWuoeaJueS4juaXpeW/l+OAggoK5Lya5oyB57ut54m55YyW77ya56iL5bqP6K+t5LmJ44CB5bel5YW36ZO+44CB5Luj56CB5LiO5L6d6LWW5Y+Y5pu044CB5rWL6K+V6YCC55So5oCn44CB6Leo5pyN5Yqh5YW85a6544CB5pWw5o2u5bqT6L+B56e744CB5Yi25ZOB5LiO6YOo572y5YWz57O744CB57q/5LiK5Zue5b2S5b2S5Zug44CCCgrkvJrlpKfluYXpmpDol4/vvJrmiYvliqjliIfliIbmlK/jgIHlhpnmnLrmorDmj5DkuqTmtojmga/jgIHlnKjpobXpnaLkuYvpl7TmkKzov5AgSXNzdWUvUFIvQ0kg54q25oCB44CCCgrigJzpmpDol4/igJ3mr5TigJzliKDpmaTigJ3mm7Tlh4bnoa7jgILmnKrmnaXkurrnnIvop4HnmoTmmK/igJzov5nkuKrlj5jmm7Tog73lkKblj5HluIPigJ3vvIzns7vnu5/kuIvpnaLlj6/og73ku43nhLbmmK8gR2l044CBQ0kg5ZKM6YOo572y5bmz5Y+w44CCCgojIyDku4DkuYjkvJrmjqjnv7vov5nkuKrliKTmlq0KCuacgOW8uuWPjeaWueaYr++8mui9r+S7tuS4k+eUqOiDveWKm+S5n+iDveagh+WHhuWMluaIkOW7ieS7t+e7hOS7tu+8jOmAmueUqOaooeWei+S8muiHquW3seWPkeeOsOW5tuS9v+eUqOWug+S7rO+8jOWuouaIt+WPquS5sOmAmueUqOW3peS9nOW5s+WPsOOAgioq5LiT5Lia5bGC5oqA5pyv5LiK5a2Y5Zyo77yM5LiN5L+d6K+B5LiT5Lia5Lqn5ZOB5ZWG5Lia5LiK54us56uL44CCKirov5nmmK/kuLvliKTmlq3kuK3mnIDkuI3noa7lrprjgIHkuZ/mnIDlgLzlvpfot5/ouKrnmoTkuIDnjq/jgIIKCuS4i+mdouaYr+mihOWFiOiuvuWumueahOinguWvn+agh+WHhu+8jCoq5LiN5piv546w5pyJ57uf6K6h5pWw5o2uKirvvJoKCnwg6KeC5a+f5Yiw55qE5LqL5a6eIHwg5bqU5aaC5L2V5L+u5q2j57uT6K66IHwKfC0tLXwtLS18Cnwg5Zyo5LiN5ZCM5LyB5Lia55qE5pei5pyJ55Sf5Lqn57O757uf5Lit77yM5o6n5Yi25qih5Z6L44CB5LiK5LiL5paH44CB5p2D6ZmQ5ZKM6aKE566X5ZCO77yM6YCa55So5bmz5Y+w5LuF6Z2g5Y+v5pu/5o2i5qCH5YeG57uE5Lu277yM5bCx6IO96L+e57ut5Lik5Liq5a2j5bqm6L6+5Yiw5LiT5Lia5bmz5Y+w55u45b2T55qE5Lqk5LuY5o6l5Y+X546H44CB5LqL5pWF546H5LiO5oC75oiQ5pys77yb5LyB5Lia5ZCM5pe25pmu6YGN5Y+W5raI54us56uL5bel56iLIEFnZW50IOmHh+i0rSB8IOaOqOe/u+KAnOS4k+S4miBDb2Rpbmcg5Lqn5ZOB57G75Yir57un57ut54us56uL4oCd55qE5Li75Yik5pat77yM5pS55Li64oCc5LiT5Lia6IO95Yqb5a2Y5Zyo77yM5L2G5Lqn5ZOB57G75Yir6KKr5ZC45pS24oCd44CCIHwKfCDliLAgMjAyOCDlubTvvIzlpKfph4/luLjop4TmlLnliqjku43kvp3otZbkurrmiYvliqjlrprkvY3mlofku7bjgIHorr7orqHmtYvor5XjgIHmi4bku7vliqHjgIHlpITnkIYgQ0nvvJvmgLvlrqHmn6XkuI7ov5Tlt6XmiJDmnKzmnKrpmo/mqKHlnovmj5DljYfkuIvpmY0gfCDkuIvosIPoh6rmsrvjgIFDaGF0IOS4u+WFpeWPo+S4juaVtOmTvuaJp+ihjOmihOa1i++8m+S4k+S4muS6p+WTgeS8muabtOS5heS/neaMgeS6pOS6kuW8j+i+heWKqeW9ouaAgeOAgiB8Cnwg6L+c56iL546v5aKD5peg5rOV57uP5rWO5Zyw5aSN5Yi25aSn5aSa5pWw55yf5a6e5bel5YW36ZO+77yM5Lu75Yqh5Li76KaB5L6d6LWW5Liq5Lq66K6+5aSH5oiW5LiT55So56Gs5Lu277yM6L+c56iL6L+Q6KGM55qE5oiQ5pys5oyB57ut6auY5LqO6IqC55yB55qE5Lq65YqbIHwg5o6o57+75LqR6buY6K6k6aKE5rWL77yM6L2s5Li65pys5Zyw5LyY5YWI44CB5LqR56uv6LCD5bqm55qE5re35ZCI57uT5p6E44CCIHwKfCDlnKjnlJ/kuqfnuqfmlLnliqjkuK3vvIzkuJrliqHop4TmoLzlj6/nqLPlrprovazmiJDpq5jopobnm5bnmoTni6znq4vpqozor4HvvIzoh6rliqjngbDluqbkuI7ooaXlgb/mmL7okZfpmY3kvY7kuovmlYXmiJDmnKwgfCDkuJPkuJogSGFybmVzcyDmm7Tlv6vnu4Tku7bljJbvvIznuq/ku6PnoIHlt6Xlhbfmm7Tlv6vmtojlpLHvvJvkvYbov5nmnKzouqvov5jkuI3otrPku6Xor4HmmI7ni6znq4vlt6XnqIvlubPlj7DkvJrmtojlpLHjgIIgfAoK5LiJ5Liq5YiG5Y+J5LiN562J5qaC546H77yaKirkuLvmg4Xmma/mmK/pgJrnlKjlhaXlj6PkuI7kuJPkuJrlubPlj7DliIblsYLvvJvlkJ7lubbmg4Xmma/pnIDopoHpqozor4HlkozkvIHkuJrlt6XnqIvmjqXlhaXlkIzml7bllYblk4HljJbvvJvmhaLoh6rmsrvmg4Xmma/liJnnlLHpqozor4HmiJDmnKzkuI7lpJbpg6jlkI7mnpzmi5bkvY/jgIIqKuWNleeci+aooeWei+amnOWNleS4iuWNh+OAgUNMSSDlvojmtYHooYzjgIHmn5Dlrrblhazlj7jlkIjlubbkuqflk4HlkI3np7DvvIzpg73ml6Dms5XliKTlrprotbDliLDkuoblk6rkuKrliIblj4njgIIKCuacgOe7iOW6lOebr+S9j+S4gOS4quS6i+Wunu+8mioq5b2T55So5oi36K+04oCc5oqK5a6D5YGa5aW94oCd77yM6LCB5oyB5pyJ6Laz5aSf55qE54q25oCB44CB6aqM6K+B6K+B5o2u5LiO5o6I5p2D77yM6IO96K6p6L+Z5Y+l6K+d5Y+v6Z2g5Zyw5Y+Y5oiQ55Sf5Lqn57O757uf5Lit55qE5Y+Y5YyW77yfKirosIHog73lgZrliLDvvIzosIHlsLHmnInkuqflk4HkvY3nva7jgIIKCiMjIOivgeaNrue0ouW8leS4jueglOeptui+ueeVjAoK5qOA57Si5oiq5q2iIDIwMjYtMTAtMDXjgILkuLvopoHkvp3mja7lrpjmlrnlt6XnqIvmlofnq6DjgIHkuqflk4Hor7TmmI7jgIHlvIDmupDlrp7njrDjgIHljp/lp4sgSXNzdWUg5LiO54us56uL5a6e6aqM44CC5Zu95YaF5qOA57Si6KaG55uWIFRSQUUg5a6Y5pa56LWE5paZ5Y+K5o6Y6YeR44CB55+l5LmO44CBQiDnq5njgIHlsI/nuqLkuabnur/ntKLvvJvlm73lpJbopobnm5blrpjmlrnotYTmlpnjgIFHaXRIdWLjgIHnoJTnqbbmnLrmnoTjgIFSZWRkaXQg5ZKM5YWs5byA6KeG6aKR57q/57Si44CC56S+5Yy66aG16Z2i5pyJ6K6/6Zeu5LiO5qOA57Si5Zmq5aOw77yM5pyq55So5pCc57Si5pGY6KaB5oiW5Liq5qGI5L2T6aqM5pSv5pKR5YWz6ZSu57uT6K6644CC5pys56CU56m25pyq6L+b6KGM6Leo5Lqn5ZOB5a6e5rWL77yM5Lmf5pyq5oqK5Y6C5ZWG6Ieq5oql5pWI546H5b2T5L2c54us56uL5pWI5p6c6K+B5o2u44CCCgotICoqUzEqKu+8mltPcGVuQUkgQ29kZXgg5b2T5YmN5Lqn5ZOB6aG1XShodHRwczovL29wZW5haS5jb20vY29kZXgvKe+8m1tDb2RleCBBcHAg5Y+R5biD77yMMjAyNi0wMi0wMl0oaHR0cHM6Ly9vcGVuYWkuY29tL2luZGV4L2ludHJvZHVjaW5nLXRoZS1jb2RleC1hcHAvKeOAguaUr+aMgeWkmuWFpeWPo+OAgeW5tuihjOS7u+WKoeOAgeS6keeOr+Wig+OAgXJldmlld++8m+S4jeivgeaYjuWFqOmTvuiHquS4u+aIkOWKn+eOh+OAggotICoqUzIqKu+8mltDaGF0R1BUIFdvcmsg5b2T5YmN5Lqn5ZOB6aG1XShodHRwczovL29wZW5haS5jb20vY2hhdGdwdC13b3JrLynvvJtbV29ya3NwYWNlIGFnZW50c10oaHR0cHM6Ly9vcGVuYWkuY29tL2J1c2luZXNzL3dvcmtzcGFjZS1hZ2VudHMvKeOAguaUr+aMgemAmueUqOW3peS9nOS4juaMgee7reW3peS9nOa1geaWueWQkeOAggotICoqUzMqKu+8mltCdWlsZGluZyBhZ2VudHMgd2l0aCB0aGUgQ2xhdWRlIEFnZW50IFNES++8jDIwMjUtMDktMjldKGh0dHBzOi8vY2xhdWRlLmNvbS9ibG9nL2J1aWxkaW5nLWFnZW50cy13aXRoLXRoZS1jbGF1ZGUtYWdlbnQtc2RrKeOAguaYjuehruivtOaYjiBDb2RlIEhhcm5lc3Mg55So5LqO6Z2eIENvZGluZyDku7vliqHlj4ogU0RLIOabtOWQjeOAggotICoqUzQqKu+8mltDbGF1ZGUgQ293b3JrIGFuZCBjaGF0IGFyZSBub3cgb25lIENsYXVkZe+8jDIwMjYtMDktMTZdKGh0dHBzOi8vY2xhdWRlLmNvbS9ibG9nL2Nvd29yay1pcy1ub3ctY2xhdWRlLynjgILmlK/mjIHpgJrnlKjlhaXlj6Pono3lkIjvvJvkuI3ku6PooaggQ2xhdWRlIENvZGUg5bey6KKr5Y+W5raI44CCCi0gKipTNSoq77yaW0VmZmVjdGl2ZSBoYXJuZXNzZXMgZm9yIGxvbmctcnVubmluZyBhZ2VudHPvvIwyMDI1LTExLTI2XShodHRwczovL3d3dy5hbnRocm9waWMuY29tL2VuZ2luZWVyaW5nL2VmZmVjdGl2ZS1oYXJuZXNzZXMtZm9yLWxvbmctcnVubmluZy1hZ2VudHMp44CC5pSv5oyB5oyB5LmF6L+b5bqm44CB546v5aKD5oGi5aSN44CB5aKe6YeP6aqM6K+B55qE5py65Yi244CCCi0gKipTNioq77yaW0N1cnNvciBQcm9qZWN0c++8jDIwMjYtMDktMTBdKGh0dHBzOi8vY3Vyc29yLmNvbS9ibG9nL3Byb2plY3RzKeOAguaUr+aMgei3qOaciCBQcm9qZWN044CB5YWx5Lqr5LiK5LiL5paH44CB5LqL5Lu26K6i6ZiF5LiO5LqRL+acrOWcsOWNj+S9nO+8m+aViOaenOaVsOWtl+S4uuWOguWVhuiHquaKpe+8jOacrOaWh+acqumHh+eUqOOAggotICoqUzcqKu+8mltDdXJzb3IgUm9sbG91dHMgLyBTZWN1cml0eSBSZXZpZXdlcu+8jDIwMjYtMDktMjNdKGh0dHBzOi8vY3Vyc29yLmNvbS9ibG9nL3JvbGxvdXRzLWFuZC1zZWN1cml0eS1yZXZpZXdlcinjgILmlK/mjIHku44gUFIg5Yiw55Sf5Lqn6KeC5a+f77yb55u05o6l5rWB6YeP6LCD5pW0562J6KKr5qCH5rOo5Li65ZCO57ut6IO95Yqb77yM5pyq5YaZ5oiQ5bey5LiK57q/44CCCi0gKipTOCoq77yaW0N1cnNvciDoh6rnrqHmnLrlmajvvIwyMDI2LTA5LTAyXShodHRwczovL2N1cnNvci5jb20vYmxvZy9zZWxmLWhvc3RlZC1tYWNoaW5lcynjgILmlK/mjIHmiZjnrqHosIPluqbkuI7lrqLmiLfmiafooYznjq/looPliIbnprvjgIIKLSAqKlM5KirvvJpbR2l0SHViIEFnZW50IEhR77yMMjAyNS0xMC0yOF0oaHR0cHM6Ly9naXRodWIuYmxvZy9uZXdzLWluc2lnaHRzL2NvbXBhbnktbmV3cy93ZWxjb21lLWhvbWUtYWdlbnRzLynjgILmlK/mjIHlpJogQWdlbnQg5rK755CG5Y+KIEdpdC9QUi9BY3Rpb25zIOS9nOS4uuWfuuehgOOAggotICoqUzEwKirvvJpbR2l0SHViIENvcGlsb3QgQXBwIOW9k+WJjemhtemdol0oaHR0cHM6Ly9naXRodWIuY29tL2ZlYXR1cmVzL2FpL2dpdGh1Yi1hcHAp44CC5pSv5oyBIElzc3Vl4oaSd29ya3NwYWNl4oaS6aqM6K+B4oaSbWVyZ2Ug55qE5b2T5YmN5Lqn5ZOB57uE57uH5pa55byP44CCCi0gKipTMTEqKu+8mltUUkFFIOWumOe9kV0oaHR0cHM6Ly93d3cudHJhZS5haS8p77ybW1doYXQgaXMgVHJhZVdvcms/XShodHRwczovL2RvY3MudHJhZS5haS9zb2xvL3doYXQtaXMtdHJhZS1zb2xvKe+8m1tUcmFlV29yayDmm7TmlrDor7TmmI5dKGh0dHBzOi8vZG9jcy50cmFlLmFpL2lkZS90cmFlLXNvbG8taXMtbm93LWF2YWlsYWJsZSnjgILlrpjnvZHlubbliJcgQ29kZS9Xb3Jr77yb5Lik5Lu95a6Y5pa55paH5qGj55qE5qih5byP5pWw6YeP5pyJ5pu05paw5beu5byC77yM5Lul5YW35L2T6aG16Z2i5YaF5a655Li65YeG77yM5LiN5o2u5q2k5o6o5pat5p625p6E5a6M5YWo57uf5LiA44CCCi0gKipTMTIqKu+8mltHZW1pbmkgQ0xJIOWPkeW4g++8jDIwMjUtMDYtMjVdKGh0dHBzOi8vYmxvZy5nb29nbGUvdGVjaG5vbG9neS9kZXZlbG9wZXJzL2ludHJvZHVjaW5nLWdlbWluaS1jbGktb3Blbi1zb3VyY2UtYWktYWdlbnQvKe+8m1vlvZPliY3lvIDmupDku5PlupNdKGh0dHBzOi8vZ2l0aHViLmNvbS9nb29nbGUtZ2VtaW5pL2dlbWluaS1jbGkp44CC5pSv5oyB57uI56uv5bel5YW35LuO5pyA5Yid5bCx6Z2i5ZCR5aSa57G75bel5L2c44CCCi0gKipTMTMqKu+8mltHb29nbGUgQW50aWdyYXZpdHnvvIwyMDI1LTExLTIwXShodHRwczovL2RldmVsb3BlcnMuZ29vZ2xlYmxvZy5jb20vYnVpbGQtd2l0aC1nb29nbGUtYW50aWdyYXZpdHktb3VyLW5ldy1hZ2VudGljLWRldmVsb3BtZW50LXBsYXRmb3JtLynjgILmlK/mjIHnvJbovpHkuI7nrqHnkIbkuKTnsbvnlYzpnaLjgIHpgJrov4flj6/lrqHpmIXkuqfniannm5HnnaPmiafooYzjgIIKLSAqKlMxNCoq77yaW0p1bGVz77yMMjAyNS0wNS0yMF0oaHR0cHM6Ly9ibG9nLmdvb2dsZS90ZWNobm9sb2d5L2dvb2dsZS1sYWJzL2p1bGVzLynjgILmlK/mjIHlvILmraXkupEgQ29kaW5nIOi3r+e6v++8m+S4jeWwhuWPkeW4g+aXtueahOeKtuaAgeW9k+S9nOWFqOmDqOW9k+WJjeiDveWKm+OAggotICoqUzE1KirvvJpbRGV2aW4gRGVza3RvcO+8jDIwMjYtMDYtMDJdKGh0dHBzOi8vY29nbml0aW9uLmFpL2Jsb2cvaW50cm9kdWNpbmctZGV2aW4tZGVza3RvcCnjgILmlK/mjIHku44gV2luZHN1cmYgSURFIOWQkSBBZ2VudCDnrqHnkIbov4Hnp7vjgIIKLSAqKlMxNioq77yaW0NvZ25pdGlvbiDkupEgQWdlbnQg5bel56iL57uP6aqM77yMMjAyNi0wNC0yM10oaHR0cHM6Ly9jb2duaXRpb24uYWkvYmxvZy93aGF0LXdlLWxlYXJuZWQtYnVpbGRpbmctY2xvdWQtYWdlbnRzKe+8m1syMDI2LTA5IOi3r+e6v+mZiOi/sF0oaHR0cHM6Ly9jb2duaXRpb24uYWkvYmxvZy9zZXJpZXMtZSnjgILmlK/mjIHmgaLlpI3jgIHmsrvnkIbkuI7kvIHkuJrmjqXlhaXnmoTmipXlhaXmlrnlkJHvvJvkuI3ph4fnurPigJzlrrnlmajml6Dms5XlrozmiJDlt6XnqIvlt6XkvZzigJ3kvZzkuLrmma7pgY3mioDmnK/lrprlvovjgIIKLSAqKlMxNyoq77yaW1JlcGxpdCDmlrDkvZPpqozvvIwyMDI2LTA4LTE4XShodHRwczovL3JlcGxpdC5jb20vYmxvZy9yZXBsaXQtaW50cm9kdWNlcy1mcmVlLW1vZGUp44CC5pSv5oyBIENvZGluZyDlubPlj7DlkJHml6XluLjnn6Xor4blt6XkvZzmianlsZXvvJvmnKrph4fnlKjlhbbkuK3lrqPkvKDmlYjnjoflgI3mlbDjgIIKLSAqKlMxOCoq77yaW09wZW5IYW5kcyDlvZPliY3ku5PlupNdKGh0dHBzOi8vZ2l0aHViLmNvbS9PcGVuSGFuZHMvT3BlbkhhbmRzKe+8m1tDbGluZSDlvZPliY3ku5PlupNdKGh0dHBzOi8vZ2l0aHViLmNvbS9jbGluZS9jbGluZSnjgILmlK/mjIEgQWdlbnTjgIHlrqLmiLfnq6/jgIHov5DooYzlkI7nq6/nmoTlj6/mi4bliIbkuI7lvIDmlL7lrp7njrDjgIIKLSAqKlMxOSoq77yaW0FzdHJvcHkgSXNzdWUgIzEyOTA277yMMjAyMi0wMy0wM10oaHR0cHM6Ly9naXRodWIuY29tL2FzdHJvcHkvYXN0cm9weS9pc3N1ZXMvMTI5MDYp77ybW+ecn+WunuS/ruWkjSBQUiAjMTI5MDddKGh0dHBzOi8vZ2l0aHViLmNvbS9hc3Ryb3B5L2FzdHJvcHkvcHVsbC8xMjkwNy9maWxlcynjgILnlKjkvZzku7vliqHnu5PmnoTnpLrkvovvvIzmnKrlo7Dnp7DlnKjmraTlr7nnhafmtYvor5Xkuqflk4HjgIIKLSAqKlMyMCoq77yaW09TV29ybGQg5Y6f5aeL6aG555uu5LiO6K665paH5YWl5Y+jXShodHRwczovL29zLXdvcmxkLmdpdGh1Yi5pby8p44CC6YCa55So6K6h566X5py65Lu75Yqh5Lmf5Y+v5Lul5pyJ5omn6KGM5byP6aqM5pS277yb5LiN562J5LqO5omA5pyJ55+l6K+G5bel5L2c6YO95Y+v57K+56Gu6K+E5YiG44CCCi0gKipTMjEqKu+8mltTV0UtYmVuY2ggVmVyaWZpZWQg55qE5bGA6ZmQ77yMMjAyNi0wMi0yM10oaHR0cHM6Ly9vcGVuYWkuY29tL2luZGV4L3doeS13ZS1uby1sb25nZXItZXZhbHVhdGUtc3dlLWJlbmNoLXZlcmlmaWVkLynvvJtbQ29kaW5nIOivhOa1i+WZquWjsOWuoeiuoe+8jDIwMjYtMDctMDhdKGh0dHBzOi8vb3BlbmFpLmNvbS9pbmRleC9zZXBhcmF0aW5nLXNpZ25hbC1mcm9tLW5vaXNlLWNvZGluZy1ldmFsdWF0aW9ucy8p44CC5L6b5bqU5ZWG56CU56m25oyH5Ye65rWL6K+V5LiO5rGh5p+T6Zeu6aKY77yM55So5p2l6ZmQ5a6a4oCc5qac5Y2VPeeUn+S6p+iDveWKm+KAneeahOaOqOaWreOAggotICoqUzIyKirvvJpbTUVUUiDlvIDlj5HogIXpmo/mnLrlrp7pqozvvIwyMDI1LTA3LTEwXShodHRwczovL21ldHIub3JnL2Jsb2cvMjAyNS0wNy0xMC1lYXJseS0yMDI1LWFpLWV4cGVyaWVuY2VkLW9zLWRldi1zdHVkeS8p44CCMTYg5ZCN5byA5Y+R6ICF44CBMjQ2IOmhueS7u+WKoeOAgeW9k+aXtuW3peWFt+W5s+Wdh+iAl+aXtuWinuWKoCAxOSXvvJvmoLfmnKzkuI7ml7bmnJ/lnYfmnInpmZDjgIIKLSAqKlMyMyoq77yaW01hbnVzIENvbnRleHQgRW5naW5lZXJpbmfvvIwyMDI1LTA3LTE4XShodHRwczovL21hbnVzLmltL2Jsb2cvQ29udGV4dC1FbmdpbmVlcmluZy1mb3ItQUktQWdlbnRzLUxlc3NvbnMtZnJvbS1CdWlsZGluZy1NYW51cynjgILmlK/mjIHmlofku7bns7vnu5/jgIHlj6/mgaLlpI3kuIrkuIvmlofkuI7pgJrnlKjmiafooYzlvqrnjq/nmoTlt6XnqIvlhbHmgKfjgIIK" download="coding-agent-research.md">下载完整文字稿</a><button id="print">打印 / 保存 PDF</button></div>
+<p class="caption">交互页为单文件，无外部脚本依赖，可离线打开。深入推理可展开查看，完整文字稿已嵌入下载链接。</p>
+</section>
+<footer>面向人类理解的系统研究 · 2026-10-05</footer></main><script>
+const steps=[
+ ['Issue 已绑定源码基线、工作目录与项目约束。可以从一个确定的起点开始。','先找项目、版本、代码位置和授权范围。仅有自然语言问题，还不能确定要改变哪个状态。'],
+ ['在指定工具链安装依赖、执行基线测试。环境错误与产品错误能被区分。','需要发现安装和运行方法；补齐工具链与基线后，才能形成同样的复现实验。'],
+ ['比较嵌套与非嵌套结果，修改矩阵组合逻辑，加入回归测试并检查受影响情形。','模型也能定位和修复；但必须主动建立同样的执行式验收，不能停在文字解释或修改截图。'],
+ ['交付源码基线、diff、测试证据，继续进入 review 与 CI。','若要达到相同标准，补齐版本、证据与集成流程。加载相同适配后，两条路线趋同。']
+];
+const years={
+ '2026':['Chat、IDE、CLI、专用 App 并存，任务开始共享。','文件、连接器、沙箱、计划与长任务已出现在多类产品中。','已观察：人仍大量补上下文、纠偏并审查结果。'],
+ '2027':['人用 Chat 发起与纠偏，用任务台、预览和 diff 检查结果。','会话状态与运行环境更多复用，代码只是任务的一种交付物。','预测：人更集中于验收条件、高风险变更和失败任务。'],
+ '2028':['Project 组织目标与上下文，跨 repo、应用和文档调度任务。','持久任务图、事件唤醒、审批与凭据代理成为平台能力。','预测：专业产品主要凭验证、企业运行环境与发布控制收费。'],
+ '2030':['用户通常直接表达目标，系统按任务加载专业能力。','通用工作空间承载共享执行底座，领域能力可嵌入或独立采购。','预测：软件生产专业平台仍在，IDE 成为按需打开的检查与调试视图。']
+};
+const scenarios={
+ 'clear-low':['最容易自治：明确、可隔离的交付','任务能在副本中反复试错，并通过独立标准判断进展。计划、实现与修复可以连续推进。','产品形态：通用入口 + 可复用专业适配。例：明确 Bug、临时脚本、规则化对账。'],
+ 'clear-high':['可以自动执行，但需生产准入机制','正确性较可判断，但共享状态和不可逆后果限制生效。需要灰度、权限、监控与补偿。','产品形态：通用编排 + 强专业控制层。例：支付修复、数据库迁移、真实资金结算。'],
+ 'weak-low':['低风险探索，人类持续给反馈','试错便宜，却缺少稳定验收标准。更多自动迭代不一定更接近人的意图。','产品形态：协作式工作空间 + 预览和反馈。例：设计方向、早期产品原型。'],
+ 'weak-high':['最难自治：判断与后果都难封闭','既不能充分验证，又难恢复。提升模型能力仍需补充外部证据、明确责任和授权。','产品形态：人类主导的决策 + 专业执行支持。例：重大架构迁移、对外重大承诺。']
+};
+function selectButtons(selector,value,attr){document.querySelectorAll(selector).forEach(b=>{let yes=b.dataset[attr]===value;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',yes?'true':'false')})}
+function setStep(i){document.getElementById('coding-state').textContent=steps[i][0];document.getElementById('general-state').textContent=steps[i][1];selectButtons('[data-step]',String(i),'step')}
+function setYear(y){const d=years[y];document.getElementById('year-entry').textContent=d[0];document.getElementById('year-common').textContent=d[1];document.getElementById('year-role').textContent=d[2];selectButtons('[data-year]',y,'year')}
+function setScenario(){const k=document.getElementById('verification').value+'-'+document.getElementById('consequence').value;const d=scenarios[k];['scenario-title','scenario-cause','scenario-product'].forEach((id,i)=>document.getElementById(id).textContent=d[i])}
+document.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.step))));
+document.querySelectorAll('[data-year]').forEach(b=>b.addEventListener('click',()=>setYear(b.dataset.year)));
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{const f=b.dataset.filter;document.querySelectorAll('#object-table tbody tr').forEach(r=>r.hidden=f!=='all'&&r.dataset.category!==f);selectButtons('[data-filter]',f,'filter')}));
+['verification','consequence'].forEach(id=>document.getElementById(id).addEventListener('change',setScenario));
+function revealAnchor(){const id=location.hash.slice(1);if(id.startsWith('source-')){document.getElementById('sources-details').open=true;requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'center'}))}}
+document.querySelectorAll('a.cite').forEach(a=>a.addEventListener('click',()=>{document.getElementById('sources-details').open=true}));window.addEventListener('hashchange',revealAnchor);
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}}),{rootMargin:'-5% 0px -65% 0px'});document.querySelectorAll('main>section').forEach(s=>observer.observe(s));
+let beforePrint=[];window.addEventListener('beforeprint',()=>{beforePrint=[...document.querySelectorAll('details')].map(d=>[d,d.open]);beforePrint.forEach(([d])=>d.open=true);document.querySelectorAll('#object-table tbody tr').forEach(r=>r.hidden=false)});window.addEventListener('afterprint',()=>beforePrint.forEach(([d,o])=>d.open=o));document.getElementById('print').addEventListener('click',()=>window.print());
+setStep(0);setYear('2026');setScenario();revealAnchor();
+</script></body></html>
