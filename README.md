@@ -25,3 +25,9 @@
 [研究阅读入口与复现说明](coding-agent-research/README.md) · [完整文字稿与来源](coding-agent-research/research.md)
 
 从任务结构与底层系统约束分析 Coding Agent 与通用 Work / Computer Agent 的产品边界，附离线交互版。
+
+## 国运 · 国家发展实验室
+
+[源码与运行说明](nation-lab/README.md) · [在线体验](https://nation-development-lab.macyu536.chatgpt.site)
+
+模拟器位于 `nation-lab/`：韩国、阿根廷、新加坡共 9 轮历史决策，支持预测封存、历史揭示、因果复盘与判断导出。
