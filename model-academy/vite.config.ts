@@ -5,6 +5,6 @@ import { fileURLToPath, URL } from 'node:url';
 export default defineConfig({
   plugins: [react()],
   // Preview artifact is mounted beside the unchanged formal Pages root.
-  base: '/hhh/v3/',
+  base: '/hhh/v4/',
   resolve: { alias: { '@': fileURLToPath(new URL('.', import.meta.url)) } },
 });
